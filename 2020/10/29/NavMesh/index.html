@@ -222,20 +222,20 @@
             <div class="markdown-body" id="post-body">
               <h1 id="NavMesh"><a href="#NavMesh" class="headerlink" title="NavMesh"></a>NavMesh</h1><p><a target="_blank" rel="noopener" href="https://wo1fsea.github.io/2016/08/21/A_Quick_Introduction_to_NavMesh/">NavMesh</a></p>
 <h2 id="生成"><a href="#生成" class="headerlink" title="生成"></a>生成</h2><ul>
-<li>首先对地图进行栅格化（分成一个个小格），然后就可以根据栅格化的地图获取到内边缘<br><img src="/Medemus/medemus.github/20201022141248234_23947.png" srcset="/img/loading.gif"></li>
-<li>接下来对边缘进行简化首先找到两个点连线得到简化的边缘<br><img src="/Medemus/medemus.github/20201022142131618_27103.png" srcset="/img/loading.gif"></li>
-<li>然后找到距离该线最远的点，加入顶点集合中<br><img src="/Medemus/medemus.github/20201022142424297_28453.png" srcset="/img/loading.gif"><br>重复该过程，直到所有不在简化轮廓集合中的点距离简化的边缘距离都小于某阈值。</li>
-<li>由于角色体型不同时，路径应该不同，在提取地图区域边缘时，向内多取一个角色体型半径生成特殊的寻路地图（即每种半径生成一个寻路网格）。<br><img src="/Medemus/medemus.github/20201022144128943_29308.png" srcset="/img/loading.gif"><br><img src="/Medemus/medemus.github/20201022144114158_15868.png" srcset="/img/loading.gif"></li>
-<li>进行空间的划分<br><img src="/Medemus/medemus.github/20201022162123919_2043.png" srcset="/img/loading.gif"><br>首先设置一个阈值，当<strong>两点间直线距离/两点边界距离</strong>小于该值时，进行区域分割。<br><img src="/Medemus/medemus.github/20201022162635191_27753.png" srcset="/img/loading.gif"><br>该过程可使用递归进行。<br>完成分割后，每块区域作为图的一个节点，每两个点之间都可以通过简单的直线路径连通。<br>可以用最短路径算法（如 Dijkstra ）来解决图节点间的寻路问题，而图节点内的路径可以简单的通过两点间连线完成。<br><img src="/Medemus/medemus.github/20201022163352484_11008.png" srcset="/img/loading.gif"><br>对于有空洞的地图，在进行边缘简化后，对每个空洞区域，找到其和地图边界点距离最近的点，连接起来作为边界。<br><img src="/Medemus/medemus.github/20201022164056252_26253.png" srcset="/img/loading.gif"></li>
-<li>动态障碍<br>可在运行时，修改地图与动态障碍物重叠的节点数据。<br><img src="/Medemus/medemus.github/20201022164332728_4957.png" srcset="/img/loading.gif"><h2 id="寻路"><a href="#寻路" class="headerlink" title="寻路"></a>寻路</h2>Unity中使用的基础算法是A*。<h3 id="漏斗算法"><a href="#漏斗算法" class="headerlink" title="漏斗算法"></a>漏斗算法</h3></li>
+<li>首先对地图进行栅格化（分成一个个小格），然后就可以根据栅格化的地图获取到内边缘<br><img src="/images/20201022141248234_23947.png" srcset="/img/loading.gif"></li>
+<li>接下来对边缘进行简化首先找到两个点连线得到简化的边缘<br><img src="/images/20201022142131618_27103.png" srcset="/img/loading.gif"></li>
+<li>然后找到距离该线最远的点，加入顶点集合中<br><img src="/images/20201022142424297_28453.png" srcset="/img/loading.gif"><br>重复该过程，直到所有不在简化轮廓集合中的点距离简化的边缘距离都小于某阈值。</li>
+<li>由于角色体型不同时，路径应该不同，在提取地图区域边缘时，向内多取一个角色体型半径生成特殊的寻路地图（即每种半径生成一个寻路网格）。<br><img src="/images/20201022144128943_29308.png" srcset="/img/loading.gif"><br><img src="/images/20201022144114158_15868.png" srcset="/img/loading.gif"></li>
+<li>进行空间的划分<br><img src="/images/20201022162123919_2043.png" srcset="/img/loading.gif"><br>首先设置一个阈值，当<strong>两点间直线距离/两点边界距离</strong>小于该值时，进行区域分割。<br><img src="/images/20201022162635191_27753.png" srcset="/img/loading.gif"><br>该过程可使用递归进行。<br>完成分割后，每块区域作为图的一个节点，每两个点之间都可以通过简单的直线路径连通。<br>可以用最短路径算法（如 Dijkstra ）来解决图节点间的寻路问题，而图节点内的路径可以简单的通过两点间连线完成。<br><img src="/images/20201022163352484_11008.png" srcset="/img/loading.gif"><br>对于有空洞的地图，在进行边缘简化后，对每个空洞区域，找到其和地图边界点距离最近的点，连接起来作为边界。<br><img src="/images/20201022164056252_26253.png" srcset="/img/loading.gif"></li>
+<li>动态障碍<br>可在运行时，修改地图与动态障碍物重叠的节点数据。<br><img src="/images/20201022164332728_4957.png" srcset="/img/loading.gif"><h2 id="寻路"><a href="#寻路" class="headerlink" title="寻路"></a>寻路</h2>Unity中使用的基础算法是A*。<h3 id="漏斗算法"><a href="#漏斗算法" class="headerlink" title="漏斗算法"></a>漏斗算法</h3></li>
 <li>使用A*之类的算法计算出从起点到终点所走过的多边形/三角形的集合。</li>
-<li>使用漏斗算法，将多边形集合转换成最优路径。<br><img src="/Medemus/medemus.github/20201022165003280_24116.png" srcset="/img/loading.gif"></li>
-<li>首先计算出三角形列表中的邻接边列表，所谓邻接边就是两个三角形公用的边<br><img src="/Medemus/medemus.github/20201022170130106_31434.png" srcset="/img/loading.gif"><br>图中橙色边即邻接边，绿色为<strong>漏斗边</strong>。</li>
-<li>将<strong>漏斗边</strong>移至下一条邻接边的两端，如果漏斗边的夹角变小或不变就算此次移动有效。<br><img src="/Medemus/medemus.github/20201022170742425_6891.png" srcset="/img/loading.gif"></li>
-<li>继续移动，如果出现了漏斗角的度数变成负数，例如右漏斗边移动到了左漏斗边的左侧，那么被盖过去的那条边的终点就成为了结果中的第一个点。同时将漏斗边的起点移到该点，构建出新漏斗。<br><img src="/Medemus/medemus.github/20201022171050194_20813.png" srcset="/img/loading.gif"></li>
-<li>如果遇到度数变大的情况，不动（虽然发生了移动但终点和起点一致）的那条边移动成功，导致度数变大的边移动失败（即其不发生移动）。<br><img src="/Medemus/medemus.github/20201022171614258_16517.png" srcset="/img/loading.gif"></li>
-<li>结束时，算法已经移动到了最后一条邻接边，但是从现在的漏斗底直接连一条线到终点肯定是不可行的。随后我们以终点一个点，当作一条两条端点相同的边。用它继续前进漏斗口。右边的漏斗边如果移动，会使漏斗口变大，因此不移动，左边的漏斗边移动，会盖过右边的漏斗边，因此右边的漏斗边终点成为了结果中的另一个点。<br><img src="/Medemus/medemus.github/20201022171731929_30643.png" srcset="/img/loading.gif"></li>
-<li>同样，以该点所在三角形的出邻接边重新构造漏斗，继续算法，很快就会发现漏斗口到终点，收到了最小，算法结束。<br><img src="/Medemus/medemus.github/20201022171754374_20441.png" srcset="/img/loading.gif"></li>
+<li>使用漏斗算法，将多边形集合转换成最优路径。<br><img src="/images/20201022165003280_24116.png" srcset="/img/loading.gif"></li>
+<li>首先计算出三角形列表中的邻接边列表，所谓邻接边就是两个三角形公用的边<br><img src="/images/20201022170130106_31434.png" srcset="/img/loading.gif"><br>图中橙色边即邻接边，绿色为<strong>漏斗边</strong>。</li>
+<li>将<strong>漏斗边</strong>移至下一条邻接边的两端，如果漏斗边的夹角变小或不变就算此次移动有效。<br><img src="/images/20201022170742425_6891.png" srcset="/img/loading.gif"></li>
+<li>继续移动，如果出现了漏斗角的度数变成负数，例如右漏斗边移动到了左漏斗边的左侧，那么被盖过去的那条边的终点就成为了结果中的第一个点。同时将漏斗边的起点移到该点，构建出新漏斗。<br><img src="/images/20201022171050194_20813.png" srcset="/img/loading.gif"></li>
+<li>如果遇到度数变大的情况，不动（虽然发生了移动但终点和起点一致）的那条边移动成功，导致度数变大的边移动失败（即其不发生移动）。<br><img src="/images/20201022171614258_16517.png" srcset="/img/loading.gif"></li>
+<li>结束时，算法已经移动到了最后一条邻接边，但是从现在的漏斗底直接连一条线到终点肯定是不可行的。随后我们以终点一个点，当作一条两条端点相同的边。用它继续前进漏斗口。右边的漏斗边如果移动，会使漏斗口变大，因此不移动，左边的漏斗边移动，会盖过右边的漏斗边，因此右边的漏斗边终点成为了结果中的另一个点。<br><img src="/images/20201022171731929_30643.png" srcset="/img/loading.gif"></li>
+<li>同样，以该点所在三角形的出邻接边重新构造漏斗，继续算法，很快就会发现漏斗口到终点，收到了最小，算法结束。<br><img src="/images/20201022171754374_20441.png" srcset="/img/loading.gif"></li>
 </ul>
 
             </div>
@@ -243,6 +243,22 @@
             <div>
               <div class="post-metas mb-3">
                 
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Navigation/">Navigation</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Navigation/">Navigation</a>
+                    
+                      <a class="hover-with-bg" href="/tags/NavMesh/">NavMesh</a>
+                    
+                  </div>
                 
               </div>
               
@@ -257,8 +273,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2020/10/28/%E9%98%BF%E5%B7%B4%E9%98%BF%E5%B7%B4/">
-                        <span class="hidden-mobile">阿巴阿巴</span>
+                      <a href="/2020/10/29/Nav2D%E6%8F%92%E4%BB%B6%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">
+                        <span class="hidden-mobile">Nav2D插件工作原理</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
