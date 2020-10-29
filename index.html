@@ -174,6 +174,45 @@
   <div class="row mx-auto index-card">
     
     
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2020/10/29/NavMesh/">NavMesh</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/10/29/NavMesh/">
+          
+          
+            
+          
+          NavMeshNavMesh
+生成
+首先对地图进行栅格化（分成一个个小格），然后就可以根据栅格化的地图获取到内边缘
+接下来对边缘进行简化首先找到两个点连线得到简化的边缘
+然后找到距离该线最远的点，加入顶点集合中重复该过程，直到所有不在简化轮廓集合中的点距离简化的边缘距离都小于某阈值。
+由于角色体型不同时，路径应该不同，在提取地图区域边缘时，向内多取一个角色体型半径生成特殊的寻路地图（即每种半径生成
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-10-29 20:56" pubdate>
+              2020-10-29
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
       <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2020/10/28/%E9%98%BF%E5%B7%B4%E9%98%BF%E5%B7%B4/" target="_self">
           <img src="/img/favicon.png" srcset="/img/loading.gif" alt="阿巴阿巴">
