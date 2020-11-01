@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="MEUSA">
   <meta name="keywords" content="">
-  <title>NavMesh - MBLOG</title>
+  <title>力扣每日一题 2020年10月31日 - MBLOG</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -165,8 +165,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2020-10-29 20:56" pubdate>
-        2020年10月29日 晚上
+      <time datetime="2020-10-31 17:15" pubdate>
+        2020年10月31日 下午
       </time>
     </span>
   
@@ -177,7 +177,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      846 字
+      865 字
     </span>
   
 
@@ -187,7 +187,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      8
+      11
        分钟
     </span>
   
@@ -217,26 +217,116 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto" id="post">
             <!-- SEO header -->
-            <h1 style="display: none">NavMesh</h1>
+            <h1 style="display: none">力扣每日一题 2020年10月31日</h1>
             
             <div class="markdown-body" id="post-body">
-              <h1 id="NavMesh"><a href="#NavMesh" class="headerlink" title="NavMesh"></a>NavMesh</h1><p><a target="_blank" rel="noopener" href="https://wo1fsea.github.io/2016/08/21/A_Quick_Introduction_to_NavMesh/">NavMesh</a></p>
-<h2 id="生成"><a href="#生成" class="headerlink" title="生成"></a>生成</h2><ul>
-<li>首先对地图进行栅格化（分成一个个小格），然后就可以根据栅格化的地图获取到内边缘<br><img src="/images/20201022141248234_23947.png" srcset="/img/loading.gif"></li>
-<li>接下来对边缘进行简化首先找到两个点连线得到简化的边缘<br><img src="/images/20201022142131618_27103.png" srcset="/img/loading.gif"></li>
-<li>然后找到距离该线最远的点，加入顶点集合中<br><img src="/images/20201022142424297_28453.png" srcset="/img/loading.gif"><br>重复该过程，直到所有不在简化轮廓集合中的点距离简化的边缘距离都小于某阈值。</li>
-<li>由于角色体型不同时，路径应该不同，在提取地图区域边缘时，向内多取一个角色体型半径生成特殊的寻路地图（即每种半径生成一个寻路网格）。<br><img src="/images/20201022144128943_29308.png" srcset="/img/loading.gif"><br><img src="/images/20201022144114158_15868.png" srcset="/img/loading.gif"></li>
-<li>进行空间的划分<br><img src="/images/20201022162123919_2043.png" srcset="/img/loading.gif"><br>首先设置一个阈值，当<strong>两点间直线距离/两点边界距离</strong>小于该值时，进行区域分割。<br><img src="/images/20201022162635191_27753.png" srcset="/img/loading.gif"><br>该过程可使用递归进行。<br>完成分割后，每块区域作为图的一个节点，每两个点之间都可以通过简单的直线路径连通。<br>可以用最短路径算法（如 Dijkstra ）来解决图节点间的寻路问题，而图节点内的路径可以简单的通过两点间连线完成。<br><img src="/images/20201022163352484_11008.png" srcset="/img/loading.gif"><br>对于有空洞的地图，在进行边缘简化后，对每个空洞区域，找到其和地图边界点距离最近的点，连接起来作为边界。<br><img src="/images/20201022164056252_26253.png" srcset="/img/loading.gif"></li>
-<li>动态障碍<br>可在运行时，修改地图与动态障碍物重叠的节点数据。<br><img src="/images/20201022164332728_4957.png" srcset="/img/loading.gif"><h2 id="寻路"><a href="#寻路" class="headerlink" title="寻路"></a>寻路</h2>Unity中使用的基础算法是A*。<h3 id="漏斗算法"><a href="#漏斗算法" class="headerlink" title="漏斗算法"></a>漏斗算法</h3></li>
-<li>使用A*之类的算法计算出从起点到终点所走过的多边形/三角形的集合。</li>
-<li>使用漏斗算法，将多边形集合转换成最优路径。<br><img src="/images/20201022165003280_24116.png" srcset="/img/loading.gif"></li>
-<li>首先计算出三角形列表中的邻接边列表，所谓邻接边就是两个三角形公用的边<br><img src="/images/20201022170130106_31434.png" srcset="/img/loading.gif"><br>图中橙色边即邻接边，绿色为<strong>漏斗边</strong>。</li>
-<li>将<strong>漏斗边</strong>移至下一条邻接边的两端，如果漏斗边的夹角变小或不变就算此次移动有效。<br><img src="/images/20201022170742425_6891.png" srcset="/img/loading.gif"></li>
-<li>继续移动，如果出现了漏斗角的度数变成负数，例如右漏斗边移动到了左漏斗边的左侧，那么被盖过去的那条边的终点就成为了结果中的第一个点。同时将漏斗边的起点移到该点，构建出新漏斗。<br><img src="/images/20201022171050194_20813.png" srcset="/img/loading.gif"></li>
-<li>如果遇到度数变大的情况，不动（虽然发生了移动但终点和起点一致）的那条边移动成功，导致度数变大的边移动失败（即其不发生移动）。<br><img src="/images/20201022171614258_16517.png" srcset="/img/loading.gif"></li>
-<li>结束时，算法已经移动到了最后一条邻接边，但是从现在的漏斗底直接连一条线到终点肯定是不可行的。随后我们以终点一个点，当作一条两条端点相同的边。用它继续前进漏斗口。右边的漏斗边如果移动，会使漏斗口变大，因此不移动，左边的漏斗边移动，会盖过右边的漏斗边，因此右边的漏斗边终点成为了结果中的另一个点。<br><img src="/images/20201022171731929_30643.png" srcset="/img/loading.gif"></li>
-<li>同样，以该点所在三角形的出邻接边重新构造漏斗，继续算法，很快就会发现漏斗口到终点，收到了最小，算法结束。<br><img src="/images/20201022171754374_20441.png" srcset="/img/loading.gif"></li>
-</ul>
+              <h1 id="力扣每日一题-2020年10月31日"><a href="#力扣每日一题-2020年10月31日" class="headerlink" title="力扣每日一题 2020年10月31日"></a>力扣每日一题 2020年10月31日</h1><h4 id="381-O-1-时间插入、删除和获取随机元素-允许重复"><a href="#381-O-1-时间插入、删除和获取随机元素-允许重复" class="headerlink" title="381. O(1) 时间插入、删除和获取随机元素 - 允许重复"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/insert-delete-getrandom-o1-duplicates-allowed/">381. O(1) 时间插入、删除和获取随机元素 - 允许重复</a></h4><blockquote>
+<p>从今天起打算记录一下每日一题，来督促自己学习，结果没想到第一天就来个困难呢（</p>
+</blockquote>
+<div class="hljs"><pre><code class="hljs reasonml">设计一个支持在平均 时间复杂度 <span class="hljs-constructor">O(1)</span> 下， 执行以下操作的数据结构。
+
+注意: 允许出现重复元素。
+
+insert(<span class="hljs-keyword">val</span>)：向集合中插入元素 <span class="hljs-keyword">val</span>。
+remove(<span class="hljs-keyword">val</span>)：当 <span class="hljs-keyword">val</span> 存在时，从集合中移除一个 <span class="hljs-keyword">val</span>。
+getRandom：从现有集合中随机获取一个元素。每个元素被返回的概率应该与其在集合中的数量呈线性相关。</code></pre></div>
+
+<div class="hljs"><pre><code class="hljs yaml"><span class="hljs-string">示例:</span>
+
+<span class="hljs-string">//</span> <span class="hljs-string">初始化一个空的集合。</span>
+<span class="hljs-string">RandomizedCollection</span> <span class="hljs-string">collection</span> <span class="hljs-string">=</span> <span class="hljs-string">new</span> <span class="hljs-string">RandomizedCollection();</span>
+
+<span class="hljs-string">//</span> <span class="hljs-string">向集合中插入</span> <span class="hljs-number">1</span> <span class="hljs-string">。返回</span> <span class="hljs-literal">true</span> <span class="hljs-string">表示集合不包含</span> <span class="hljs-number">1</span> <span class="hljs-string">。</span>
+<span class="hljs-string">collection.insert(1);</span>
+
+<span class="hljs-string">//</span> <span class="hljs-string">向集合中插入另一个</span> <span class="hljs-number">1</span> <span class="hljs-string">。返回</span> <span class="hljs-literal">false</span> <span class="hljs-string">表示集合包含</span> <span class="hljs-number">1</span> <span class="hljs-string">。集合现在包含</span> [<span class="hljs-number">1</span>,<span class="hljs-number">1</span>] <span class="hljs-string">。</span>
+<span class="hljs-string">collection.insert(1);</span>
+
+<span class="hljs-string">//</span> <span class="hljs-string">向集合中插入</span> <span class="hljs-number">2</span> <span class="hljs-string">，返回</span> <span class="hljs-literal">true</span> <span class="hljs-string">。集合现在包含</span> [<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">2</span>] <span class="hljs-string">。</span>
+<span class="hljs-string">collection.insert(2);</span>
+
+<span class="hljs-string">//</span> <span class="hljs-string">getRandom</span> <span class="hljs-string">应当有</span> <span class="hljs-number">2</span><span class="hljs-string">/3</span> <span class="hljs-string">的概率返回</span> <span class="hljs-number">1</span> <span class="hljs-string">，1/3</span> <span class="hljs-string">的概率返回</span> <span class="hljs-number">2</span> <span class="hljs-string">。</span>
+<span class="hljs-string">collection.getRandom();</span>
+
+<span class="hljs-string">//</span> <span class="hljs-string">从集合中删除</span> <span class="hljs-number">1</span> <span class="hljs-string">，返回</span> <span class="hljs-literal">true</span> <span class="hljs-string">。集合现在包含</span> [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>] <span class="hljs-string">。</span>
+<span class="hljs-string">collection.remove(1);</span>
+
+<span class="hljs-string">//</span> <span class="hljs-string">getRandom</span> <span class="hljs-string">应有相同概率返回</span> <span class="hljs-number">1</span> <span class="hljs-string">和</span> <span class="hljs-number">2</span> <span class="hljs-string">。</span>
+<span class="hljs-string">collection.getRandom();</span></code></pre></div>
+
+
+
+<p>初看这题的第一反应就想到了哈希表（因为要求插入、查询、删除的平均时间复杂度在o(1)下），但一开始有一个没想通的就是允许重复然后随机获取概率与其数量相关。后来看到说用List维护数据，哈希表维护数据的Index，当删除时，将需要删除的数据与List最后一个数据交换，避免删除List的数据造成重新排列的问题，这样就可以在o(1)的时间内完成这三个操作了。</p>
+<p>于是最后完成的代码为：</p>
+<div class="hljs"><pre><code class="hljs c#"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">RandomizedCollection</span>
+   &#123;
+       <span class="hljs-keyword">public</span> List&lt;<span class="hljs-built_in">int</span>&gt; values;
+       <span class="hljs-keyword">public</span> Dictionary&lt;<span class="hljs-built_in">int</span>, HashSet&lt;<span class="hljs-built_in">int</span>&gt;&gt; valuesIndex;
+       <span class="hljs-comment">/** Initialize your data structure here. */</span>
+       <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">RandomizedCollection</span>(<span class="hljs-params"></span>)</span> &#123;
+           values = <span class="hljs-keyword">new</span> List&lt;<span class="hljs-built_in">int</span>&gt;();
+           valuesIndex = <span class="hljs-keyword">new</span> Dictionary&lt;<span class="hljs-built_in">int</span>, HashSet&lt;<span class="hljs-built_in">int</span>&gt;&gt;();
+       &#125;
+   
+       <span class="hljs-comment">/** Inserts a value to the collection. Returns true if the collection did not already contain the specified element. */</span>
+       <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-built_in">bool</span> <span class="hljs-title">Insert</span>(<span class="hljs-params"><span class="hljs-built_in">int</span> val</span>)</span> &#123;
+           values.Add(val);
+           <span class="hljs-keyword">if</span> (valuesIndex.ContainsKey(val))
+           &#123;
+               valuesIndex[val].Add(values.Count - <span class="hljs-number">1</span>);
+               <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+           &#125;
+           <span class="hljs-keyword">else</span>
+           &#123;
+               valuesIndex[val] = <span class="hljs-keyword">new</span> HashSet&lt;<span class="hljs-built_in">int</span>&gt;();
+               valuesIndex[val].Add(values.Count - <span class="hljs-number">1</span>);
+               <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+           &#125;
+       &#125;
+   
+       <span class="hljs-comment">/** Removes a value from the collection. Returns true if the collection contained the specified element. */</span>
+       <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-built_in">bool</span> <span class="hljs-title">Remove</span>(<span class="hljs-params"><span class="hljs-built_in">int</span> val</span>)</span> &#123;
+          <span class="hljs-keyword">if</span> (!valuesIndex.ContainsKey(val))
+           &#123;
+               <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+           &#125;
+           
+           <span class="hljs-keyword">if</span> (val == values.Last())
+           &#123;
+               valuesIndex[val].Remove(values.Count - <span class="hljs-number">1</span>);
+               values.RemoveAt(values.Count - <span class="hljs-number">1</span>);
+               <span class="hljs-keyword">if</span> (valuesIndex[val].Count == <span class="hljs-number">0</span>)
+           	&#123;
+               	valuesIndex.Remove(val);
+           	&#125;
+               <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+           &#125;
+           <span class="hljs-built_in">int</span> index = valuesIndex[val].Last(); <span class="hljs-comment">//所要删的元素的index</span>
+           <span class="hljs-built_in">int</span> lastIndex = values.Count - <span class="hljs-number">1</span>;<span class="hljs-comment">//最后一个元素的index</span>
+           <span class="hljs-built_in">int</span> tmp = values[lastIndex];<span class="hljs-comment">//最后一个元素</span>
+           
+           valuesIndex[tmp].Remove(lastIndex);<span class="hljs-comment">//最后一个元素把index删掉</span>
+           valuesIndex[tmp].Add(index);<span class="hljs-comment">//最后一个元素添加所要删除的元素的index</span>
+           values[index] = tmp;<span class="hljs-comment">//将最后一个元素放到要删的元素处</span>
+           values.RemoveAt(lastIndex);<span class="hljs-comment">//删除数组最后一个</span>
+           valuesIndex[val].Remove(index);<span class="hljs-comment">//将删除的元素的index从其dic中删除</span>
+           
+           <span class="hljs-keyword">if</span> (valuesIndex[val].Count == <span class="hljs-number">0</span>)
+           &#123;
+               valuesIndex.Remove(val);
+           &#125;
+           
+           <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+       &#125;
+   
+       <span class="hljs-comment">/** Get a random element from the collection. */</span>
+       <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span> <span class="hljs-title">GetRandom</span>(<span class="hljs-params"></span>)</span> &#123;
+           Random random = <span class="hljs-keyword">new</span> Random(Guid.NewGuid().GetHashCode());
+           <span class="hljs-keyword">return</span> values[random.Next(<span class="hljs-number">0</span>,values.Count)];
+       &#125;
+   &#125;</code></pre></div>
+
+<p>其中随机数这块卡了我好久，一开始直接调用的<code> Random random = new Random();</code>结果由于时间间隔太短导致每次取得的随机值都一样，后来粗暴的将seed设成上方这样，勉强拿到了比较随机的值。</p>
 
             </div>
             <hr>
@@ -246,7 +336,7 @@
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/categories/Navigation/">Navigation</a>
+                      <a class="hover-with-bg" href="/categories/LeetCode/">LeetCode</a>
                     
                   </div>
                 
@@ -254,9 +344,9 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/Navigation/">Navigation</a>
+                      <a class="hover-with-bg" href="/tags/%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/">每日一题</a>
                     
-                      <a class="hover-with-bg" href="/tags/NavMesh/">NavMesh</a>
+                      <a class="hover-with-bg" href="/tags/LeetCode/">LeetCode</a>
                     
                   </div>
                 
@@ -269,18 +359,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2020/10/31/LeetCode-1/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">力扣每日一题 2020年10月31日</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2020/10/29/Nav2D%E6%8F%92%E4%BB%B6%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">
-                        <span class="hidden-mobile">Nav2D插件工作原理</span>
+                      <a href="/2020/10/29/NavMesh/">
+                        <span class="hidden-mobile">NavMesh</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -416,7 +500,7 @@
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "NavMesh&nbsp;",
+        "力扣每日一题 2020年10月31日&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
