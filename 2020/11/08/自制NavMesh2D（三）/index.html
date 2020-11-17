@@ -220,7 +220,10 @@
             <h1 style="display: none">自制NavMesh2D（三）</h1>
             
             <div class="markdown-body" id="post-body">
-              <h1 id="自制NavMesh2D（三）"><a href="#自制NavMesh2D（三）" class="headerlink" title="自制NavMesh2D（三）"></a>自制NavMesh2D（三）</h1><h2 id="对三角形进行A-寻路"><a href="#对三角形进行A-寻路" class="headerlink" title="对三角形进行A*寻路"></a>对三角形进行A*寻路</h2><p>在获得具体路径之前，需要知道走过了哪些三角形，只有知道需要经过哪些三角形才能进行接下来的路径规划，而一般这步操作是由A*算法来进行的。</p>
+              <blockquote>
+<p>图源：<a target="_blank" rel="noopener" href="https://www.pixiv.net/artworks/85447522">https://www.pixiv.net/artworks/85447522</a></p>
+</blockquote>
+<h1 id="自制NavMesh2D（三）"><a href="#自制NavMesh2D（三）" class="headerlink" title="自制NavMesh2D（三）"></a>自制NavMesh2D（三）</h1><h2 id="对三角形进行A-寻路"><a href="#对三角形进行A-寻路" class="headerlink" title="对三角形进行A*寻路"></a>对三角形进行A*寻路</h2><p>在获得具体路径之前，需要知道走过了哪些三角形，只有知道需要经过哪些三角形才能进行接下来的路径规划，而一般这步操作是由A*算法来进行的。</p>
 <p>在常见情况下，A*往往是对二维网格进行操作。</p>
 <p><img src="/images/20201113113749257_3192.png" srcset="/img/loading.gif" alt="A*"></p>
 <p>那么如果要在不规则的三角形集合中进行A<em>寻路，看上去似乎有很大不同，但其实本质是一样的，在（二）中，为了支持三角形进行A</em>寻路，为其增添了一些参数，并规定了在三角形中的G与H的计算规则，这样就能按照常规的方法来进行A*寻路的操作了。</p>
@@ -321,7 +324,7 @@ Debug.LogWarning(<span class="hljs-string">&quot;start:&quot;</span> + startNavT
 <h2 id="计算路径"><a href="#计算路径" class="headerlink" title="计算路径"></a>计算路径</h2><p>在有了三角形后，就可以将其转换为具体的路径了。</p>
 <p><img src="/images/20201022165003280_24116.png" srcset="/img/loading.gif" alt="转换为具体的路径"></p>
 <p>通过计算拐点获得路径上的路径点，再将这些路径点连接起来便是所需要的路径了。</p>
-<p>所以这一步的关键操作就在于如何获取拐点。<a href="NavMesh.md">NavMesh</a></p>
+<p>所以这一步的关键操作就在于如何获取拐点。<a target="_blank" rel="noopener" href="https://medemus.github.io/2020/10/29/NavMesh/">NavMesh</a></p>
 <p>设计一个方法，用来获取<strong>下一个拐点</strong>：</p>
 <p>所需要的相关信息：</p>
 <div class="hljs"><pre><code class="hljs c#"><span class="hljs-function"><span class="hljs-keyword">public</span> Vector2 <span class="hljs-title">GetNextWayPoint</span>(<span class="hljs-params">Vector2 way,List&lt;NavTriangle&gt; pathList,Vector2 end,<span class="hljs-keyword">ref</span> <span class="hljs-built_in">int</span> curIndex</span>)</span>
