@@ -17,7 +17,7 @@
   <meta name="description" content="">
   <meta name="author" content="MEUSA">
   <meta name="keywords" content="">
-  <title>力扣每日一题 2020年10月31日 - MBLOG</title>
+  <title>自制NavMesh2D（一） - MBLOG</title>
 
   <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
 
@@ -165,8 +165,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2020-10-31 17:15" pubdate>
-        2020年10月31日 下午
+      <time datetime="2020-11-02 20:56" pubdate>
+        2020年11月2日 晚上
       </time>
     </span>
   
@@ -177,7 +177,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      865 字
+      2.1k 字
     </span>
   
 
@@ -187,7 +187,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      11
+      22
        分钟
     </span>
   
@@ -217,116 +217,93 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto" id="post">
             <!-- SEO header -->
-            <h1 style="display: none">力扣每日一题 2020年10月31日</h1>
+            <h1 style="display: none">自制NavMesh2D（一）</h1>
             
             <div class="markdown-body" id="post-body">
-              <h1 id="力扣每日一题-2020年10月31日"><a href="#力扣每日一题-2020年10月31日" class="headerlink" title="力扣每日一题 2020年10月31日"></a>力扣每日一题 2020年10月31日</h1><h4 id="381-O-1-时间插入、删除和获取随机元素-允许重复"><a href="#381-O-1-时间插入、删除和获取随机元素-允许重复" class="headerlink" title="381. O(1) 时间插入、删除和获取随机元素 - 允许重复"></a><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/insert-delete-getrandom-o1-duplicates-allowed/">381. O(1) 时间插入、删除和获取随机元素 - 允许重复</a></h4><blockquote>
-<p>从今天起打算记录一下每日一题，来督促自己学习，结果没想到第一天就来个困难呢（</p>
-</blockquote>
-<div class="hljs"><pre><code class="hljs reasonml">设计一个支持在平均 时间复杂度 <span class="hljs-constructor">O(1)</span> 下， 执行以下操作的数据结构。
+              <h1 id="自制NavMesh2D（一）"><a href="#自制NavMesh2D（一）" class="headerlink" title="自制NavMesh2D（一）"></a>自制NavMesh2D（一）</h1><h2 id="网格构建"><a href="#网格构建" class="headerlink" title="网格构建"></a>网格构建</h2><h3 id="三角形剖分"><a href="#三角形剖分" class="headerlink" title="三角形剖分"></a>三角形剖分</h3><p>三角形剖分的方法有好几种例如<strong>Delaunay三角剖分算法</strong></p>
+<div class="hljs"><pre><code>1.除了端点，三角形的边不包含其他任何点。
 
-注意: 允许出现重复元素。
+2.除了在点上的连接，没有任何一条边是相交的。
 
-insert(<span class="hljs-keyword">val</span>)：向集合中插入元素 <span class="hljs-keyword">val</span>。
-remove(<span class="hljs-keyword">val</span>)：当 <span class="hljs-keyword">val</span> 存在时，从集合中移除一个 <span class="hljs-keyword">val</span>。
-getRandom：从现有集合中随机获取一个元素。每个元素被返回的概率应该与其在集合中的数量呈线性相关。</code></pre></div>
+3.所有的面都是三角形，且所有三角形的合集是所有点集合的凸包。</code></pre></div>
+<p>但是这个方法里的几种算法都只适合于凸多边形，而真实情况则是会出现凹多边形以及空洞等情况。<br>所以使用<strong>切耳算法</strong>能够更好的解决这些问题。</p>
+<div class="hljs"><pre><code>第一，找到一个耳点。
 
-<div class="hljs"><pre><code class="hljs yaml"><span class="hljs-string">示例:</span>
+第二，记录这个耳朵三角形，然后去掉这个耳朵点，在剩余的顶点中，继续回到第一步
 
-<span class="hljs-string">//</span> <span class="hljs-string">初始化一个空的集合。</span>
-<span class="hljs-string">RandomizedCollection</span> <span class="hljs-string">collection</span> <span class="hljs-string">=</span> <span class="hljs-string">new</span> <span class="hljs-string">RandomizedCollection();</span>
+第三，直到剩下最后3个点形成一个三角形并记录下来，把所有记录的三角形拼接起来就形成了三角化网格。</code></pre></div>
+<p>上述步骤的几个名词解释:</p>
+<div class="hljs"><pre><code>1.简单多边形是，所有顶点都是顺时针或者逆时针排列的顶点，每个顶点只连接两条边，边与边之间没有交叉的多边形，就叫做简单多边形。
 
-<span class="hljs-string">//</span> <span class="hljs-string">向集合中插入</span> <span class="hljs-number">1</span> <span class="hljs-string">。返回</span> <span class="hljs-literal">true</span> <span class="hljs-string">表示集合不包含</span> <span class="hljs-number">1</span> <span class="hljs-string">。</span>
-<span class="hljs-string">collection.insert(1);</span>
+2.耳点，耳点的意思是，多边形中相邻的三个顶点V0,V1,V2形成的三角形里，不包含任何的其他顶点，并且如果V1点是凸点，即V0-V1的连线与V1-V2的连线之间形成的夹角小于180度，则认为V1是耳点。所以一个由4个顶点组成的多边形中，至少有2个耳点。
 
-<span class="hljs-string">//</span> <span class="hljs-string">向集合中插入另一个</span> <span class="hljs-number">1</span> <span class="hljs-string">。返回</span> <span class="hljs-literal">false</span> <span class="hljs-string">表示集合包含</span> <span class="hljs-number">1</span> <span class="hljs-string">。集合现在包含</span> [<span class="hljs-number">1</span>,<span class="hljs-number">1</span>] <span class="hljs-string">。</span>
-<span class="hljs-string">collection.insert(1);</span>
+3.耳朵三角形，三角形顶点中有耳点的就叫耳朵三角形。</code></pre></div>
+<p>如果出现了空洞的话:</p>
+<div class="hljs"><pre><code>1，用外围的简单多边形上的点，连接‘洞’的简单多边形，因此为了保持所有点的一致性，‘洞’必须是与外围的多边形的点的顺序是相反的。即外围如果是逆时针的顺序，‘洞’则需要顺时针的顺序。
 
-<span class="hljs-string">//</span> <span class="hljs-string">向集合中插入</span> <span class="hljs-number">2</span> <span class="hljs-string">，返回</span> <span class="hljs-literal">true</span> <span class="hljs-string">。集合现在包含</span> [<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">2</span>] <span class="hljs-string">。</span>
-<span class="hljs-string">collection.insert(2);</span>
+2，在连接处，产生两个一模一样的点，即连接点。</code></pre></div>
+<p>下面以图片来做演示:</p>
+<h4 id="不包含洞与岛"><a href="#不包含洞与岛" class="headerlink" title="不包含洞与岛"></a>不包含洞与岛</h4><p><img src="/images/20201102143845357_29727.png" srcset="/img/loading.gif" alt="移除耳朵&lt;2,3,4&gt;"></p>
+<p>首先初始的时候凸顶点集合C={0,1,3,4,6,9}，初始凹顶点集合R={2,5,7,8},初始的耳朵集合E={3,4,6,9}(三角形0,1,2中间有一个顶点7,所以1不是耳朵)。<br>然后将顶点3去除后,2还是凹顶点,4还是耳朵顶点,所以这两集合不变。</p>
+<p><img src="/images/20201102145420628_8434.png" srcset="/img/loading.gif" alt="移除耳朵&lt;2,4,5&gt;"></p>
+<p>接着移除4,5从凹顶点变成了凸顶点,并且成为了耳朵,所以将5从凹顶点移除,加入耳朵顶点集合。<br>凹节点集合R={2,7,8},耳朵集合E={5,6,9}</p>
+<p><img src="/images/20201102145515174_12136.png" srcset="/img/loading.gif" alt="移除&lt;2,5,6&gt;"></p>
+<p>移除5,此时2变成了凸顶点,但由于7在&lt;1,2,6&gt;中,所以不是耳朵,R={7,8}(移除了2)，耳朵集合E={6,9}(移除了5)。</p>
+<p><img src="/images/20201102150507996_5553.png" srcset="/img/loading.gif" alt="移除&lt;2,6,7&gt;"></p>
+<p>此时2变成了耳朵,耳朵集合E={9,2}(添加2移除6)。</p>
+<p><img src="/images/20201102150932259_10630.png" srcset="/img/loading.gif" alt="移除&lt;8,9,0&gt;"></p>
+<p>8变成了耳朵,0也从凸节点变成了耳朵,凹点集合R={7}，耳朵集合E={0,2,8}(添加8 ，添加0，移除9)。</p>
+<p><img src="/images/20201102151517995_26348.png" srcset="/img/loading.gif" alt="移除&lt;8,0,1&gt;"></p>
+<p>耳朵列表变为E={2,8}(移除了0)。</p>
+<p><img src="/images/20201102151650243_7485.png" srcset="/img/loading.gif" alt="移除&lt;1,2,7&gt;"></p>
+<p>只剩下了三个顶点,组成最后一个三角形。</p>
+<p><img src="/images/20201102151802696_25394.png" srcset="/img/loading.gif" alt="完成分割的多边形"></p>
+<h4 id="含有洞与岛的情况"><a href="#含有洞与岛的情况" class="headerlink" title="含有洞与岛的情况"></a>含有洞与岛的情况</h4><p><img src="/images/20201102152814664_31049.png" srcset="/img/loading.gif" alt="含有岛洞的多边形"></p>
+<p>注意:<strong>外侧多边形的定点方形和内测岛洞的顶点方向必须是相反的。如果外侧的顶点是逆时针顺序，那么内测的顶点则必须是顺时针顺序。</strong></p>
+<p>首先将其构造成简单多边形,连接&lt;11,16&gt;,同时复制这两点连接&lt;19,18&gt;,两条边重合,方向相反,以此将该多边形构造成简单多边形,去除了空洞。</p>
+<p><img src="/images/20201102153101248_22291.png" srcset="/img/loading.gif"></p>
+<p>图中蓝色的顶点是互相可见的,<strong>在顶点数据结构不同的情况下,互相可见的顶点必须复制</strong>。每个数据结构存储当前点可能是凹点也可能是凸点。即使使用同一个坐标的两个点，也可能一个是凹点，一个是凸点，比如位于最下面的蓝色顶点11(18)。原始的顶点在最初的外多边形中是凹点，分割后在新的多边形中，V11与红色边相连，构成了一个凹点，与蓝色边相连构成另一个凸点。</p>
+<div class="hljs"><pre><code>原始的外多边形顶点数据：
 
-<span class="hljs-string">//</span> <span class="hljs-string">getRandom</span> <span class="hljs-string">应当有</span> <span class="hljs-number">2</span><span class="hljs-string">/3</span> <span class="hljs-string">的概率返回</span> <span class="hljs-number">1</span> <span class="hljs-string">，1/3</span> <span class="hljs-string">的概率返回</span> <span class="hljs-number">2</span> <span class="hljs-string">。</span>
-<span class="hljs-string">collection.getRandom();</span>
+&#123;0,1,2,3,4,5,6,7,8,9,10,11,12,13,14&#125;
 
-<span class="hljs-string">//</span> <span class="hljs-string">从集合中删除</span> <span class="hljs-number">1</span> <span class="hljs-string">，返回</span> <span class="hljs-literal">true</span> <span class="hljs-string">。集合现在包含</span> [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>] <span class="hljs-string">。</span>
-<span class="hljs-string">collection.remove(1);</span>
+原始的内多边形数据
 
-<span class="hljs-string">//</span> <span class="hljs-string">getRandom</span> <span class="hljs-string">应有相同概率返回</span> <span class="hljs-number">1</span> <span class="hljs-string">和</span> <span class="hljs-number">2</span> <span class="hljs-string">。</span>
-<span class="hljs-string">collection.getRandom();</span></code></pre></div>
+&#123;15,16,17&#125;
 
+分割后顶点V11被复制出V18，顶点V16复制出V19，这时候的简单多边形数据如下：
 
+&#123;0,1,2,3,4,5,6,7,8,9,10,11,16,17,15,19,18,12,13,14&#125;
 
-<p>初看这题的第一反应就想到了哈希表（因为要求插入、查询、删除的平均时间复杂度在o(1)下），但一开始有一个没想通的就是允许重复然后随机获取概率与其数量相关。后来看到说用List维护数据，哈希表维护数据的Index，当删除时，将需要删除的数据与List最后一个数据交换，避免删除List的数据造成重新排列的问题，这样就可以在o(1)的时间内完成这三个操作了。</p>
-<p>于是最后完成的代码为：</p>
-<div class="hljs"><pre><code class="hljs c#"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">RandomizedCollection</span>
-   &#123;
-       <span class="hljs-keyword">public</span> List&lt;<span class="hljs-built_in">int</span>&gt; values;
-       <span class="hljs-keyword">public</span> Dictionary&lt;<span class="hljs-built_in">int</span>, HashSet&lt;<span class="hljs-built_in">int</span>&gt;&gt; valuesIndex;
-       <span class="hljs-comment">/** Initialize your data structure here. */</span>
-       <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">RandomizedCollection</span>(<span class="hljs-params"></span>)</span> &#123;
-           values = <span class="hljs-keyword">new</span> List&lt;<span class="hljs-built_in">int</span>&gt;();
-           valuesIndex = <span class="hljs-keyword">new</span> Dictionary&lt;<span class="hljs-built_in">int</span>, HashSet&lt;<span class="hljs-built_in">int</span>&gt;&gt;();
-       &#125;
-   
-       <span class="hljs-comment">/** Inserts a value to the collection. Returns true if the collection did not already contain the specified element. */</span>
-       <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-built_in">bool</span> <span class="hljs-title">Insert</span>(<span class="hljs-params"><span class="hljs-built_in">int</span> val</span>)</span> &#123;
-           values.Add(val);
-           <span class="hljs-keyword">if</span> (valuesIndex.ContainsKey(val))
-           &#123;
-               valuesIndex[val].Add(values.Count - <span class="hljs-number">1</span>);
-               <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-           &#125;
-           <span class="hljs-keyword">else</span>
-           &#123;
-               valuesIndex[val] = <span class="hljs-keyword">new</span> HashSet&lt;<span class="hljs-built_in">int</span>&gt;();
-               valuesIndex[val].Add(values.Count - <span class="hljs-number">1</span>);
-               <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
-           &#125;
-       &#125;
-   
-       <span class="hljs-comment">/** Removes a value from the collection. Returns true if the collection contained the specified element. */</span>
-       <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-built_in">bool</span> <span class="hljs-title">Remove</span>(<span class="hljs-params"><span class="hljs-built_in">int</span> val</span>)</span> &#123;
-          <span class="hljs-keyword">if</span> (!valuesIndex.ContainsKey(val))
-           &#123;
-               <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-           &#125;
-           
-           <span class="hljs-keyword">if</span> (val == values.Last())
-           &#123;
-               valuesIndex[val].Remove(values.Count - <span class="hljs-number">1</span>);
-               values.RemoveAt(values.Count - <span class="hljs-number">1</span>);
-               <span class="hljs-keyword">if</span> (valuesIndex[val].Count == <span class="hljs-number">0</span>)
-           	&#123;
-               	valuesIndex.Remove(val);
-           	&#125;
-               <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
-           &#125;
-           <span class="hljs-built_in">int</span> index = valuesIndex[val].Last(); <span class="hljs-comment">//所要删的元素的index</span>
-           <span class="hljs-built_in">int</span> lastIndex = values.Count - <span class="hljs-number">1</span>;<span class="hljs-comment">//最后一个元素的index</span>
-           <span class="hljs-built_in">int</span> tmp = values[lastIndex];<span class="hljs-comment">//最后一个元素</span>
-           
-           valuesIndex[tmp].Remove(lastIndex);<span class="hljs-comment">//最后一个元素把index删掉</span>
-           valuesIndex[tmp].Add(index);<span class="hljs-comment">//最后一个元素添加所要删除的元素的index</span>
-           values[index] = tmp;<span class="hljs-comment">//将最后一个元素放到要删的元素处</span>
-           values.RemoveAt(lastIndex);<span class="hljs-comment">//删除数组最后一个</span>
-           valuesIndex[val].Remove(index);<span class="hljs-comment">//将删除的元素的index从其dic中删除</span>
-           
-           <span class="hljs-keyword">if</span> (valuesIndex[val].Count == <span class="hljs-number">0</span>)
-           &#123;
-               valuesIndex.Remove(val);
-           &#125;
-           
-           <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
-       &#125;
-   
-       <span class="hljs-comment">/** Get a random element from the collection. */</span>
-       <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span> <span class="hljs-title">GetRandom</span>(<span class="hljs-params"></span>)</span> &#123;
-           Random random = <span class="hljs-keyword">new</span> Random(Guid.NewGuid().GetHashCode());
-           <span class="hljs-keyword">return</span> values[random.Next(<span class="hljs-number">0</span>,values.Count)];
-       &#125;
-   &#125;</code></pre></div>
+新的多边形即可以使用耳朵裁剪法切割。</code></pre></div>
+<h5 id="寻找互相可见点"><a href="#寻找互相可见点" class="headerlink" title="寻找互相可见点"></a>寻找互相可见点</h5><p>上图中，11与16是一对相互可见点，但其实这样的点不止其一对，一个点来自外多边形，一个点来自内多边形，所以需要一个算法来寻找这样的多边形点。</p>
+<p>以内多边形的最右点(X最大的点)为原点，向右作射线，如首先交于外多边形的顶点，则该顶点为相互可见点，而一般会相交于边上一点，设相交于I点，该边两端点离M(原点)最近的点就是相互可见点。</p>
+<p><img src="/images/20201102160834441_5555.png" srcset="/img/loading.gif" alt="相互可见点Ⅰ"></p>
+<p>但有时候可能会出现被阻挡的情况。</p>
+<p><img src="/images/20201102162211971_6308.png" srcset="/img/loading.gif" alt="MP不可见"></p>
+<p>此时有A、B、C三点在三角形MIP内部，获取这三点与M的连线与MI的夹角，取夹角最小的为互相可见点。</p>
+<div class="hljs"><pre><code>算法总结如下:
 
-<p>其中随机数这块卡了我好久，一开始直接调用的<code> Random random = new Random();</code>结果由于时间间隔太短导致每次取得的随机值都一样，后来粗暴的将seed设成上方这样，勉强拿到了比较随机的值。</p>
+1、寻找内部多边形x周最大值的顶点M
+
+2、沿X周正方向，寻找最近的相交边&lt;Vi,Vi+1&gt;,让其焦点设置为I，构成X轴方向对M的最近可见点
+
+3、如果I是一个外部顶点，则M和I相互可见，算法执行结束
+
+4、如果I只是边上的一个点，寻找端点中x值片的一个，设置为P
+
+5、寻找位于P内的其他外多边形的可连接顶点。如果所有的顶点都在&lt;M,I,P&gt;之外，则M与P相互可见，反正结果
+
+6、如果有至少一个点位于三角形&lt;M,I,P&gt;内部，则寻找其中的一个顶点，计算其与x轴(1,0)的夹角，夹角最小的顶点R与M构成相互可见边，算法结束
+
+7、在这个算法中，有可能有多个顶点同事具有最小的角度，这种情况下，寻找距离M最近的一个点即可</code></pre></div>
+<h4 id="含有多个岛洞的多边形"><a href="#含有多个岛洞的多边形" class="headerlink" title="含有多个岛洞的多边形"></a>含有多个岛洞的多边形</h4><p>此处的岛洞都仅被外多边形包含，彼此不存在嵌套岛洞的情形</p>
+<p><img src="/images/20201102162719643_22015.png" srcset="/img/loading.gif" alt="含有多个岛洞"></p>
+<p>内多边形I1没有任何一个顶点与外部多边形相互可见，多边形I0则拥有多个与外部多边形相互可见的点。因此，我们可以使用前面介绍的算法，首先把I0和外部多边形拆分，合并成为一个简单多边形，这样，新形成的外多边形则和I1构成了一件简单多边形，使用耳切法分割集合。</p>
+<h4 id="嵌套多边形"><a href="#嵌套多边形" class="headerlink" title="嵌套多边形"></a>嵌套多边形</h4><p>内多边形也可能包含一些泪如岛洞的外多边形，类如嵌套。这样导致了嵌套多边形的树形结构。根节点是最外围的外多边形，子节点则是包含在当前最外多边形内部的内多边形。每一个孙子节点，则是构成直接被最外围多边形包含的内多边形的子树，每个多边形树可以按照宽度优先去遍历。</p>
+<p><img src="/images/20201102163503259_27207.png" srcset="/img/loading.gif" alt="嵌套多边形"></p>
+<p><img src="/images/20201102164111846_32408.png" srcset="/img/loading.gif" alt="树形结构Ⅰ"></p>
+<p>使用上面的获取互相可见边的方法，可以生成新的简单多边形，对每个内多边形都做这样的操作，完成最终的三角划分，以便获取最终的索引顺序，来代替最初的多边形顶点定义顺序。相比原始的值，这里可能需要复制一些顶点，以便被多个三角形使用。</p>
 
             </div>
             <hr>
@@ -336,7 +313,7 @@ getRandom：从现有集合中随机获取一个元素。每个元素被返回�
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/categories/LeetCode/">LeetCode</a>
+                      <a class="hover-with-bg" href="/categories/Navigation/">Navigation</a>
                     
                   </div>
                 
@@ -344,9 +321,9 @@ getRandom：从现有集合中随机获取一个元素。每个元素被返回�
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/%E6%AF%8F%E6%97%A5%E4%B8%80%E9%A2%98/">每日一题</a>
+                      <a class="hover-with-bg" href="/tags/Navigation/">Navigation</a>
                     
-                      <a class="hover-with-bg" href="/tags/LeetCode/">LeetCode</a>
+                      <a class="hover-with-bg" href="/tags/NavMesh/">NavMesh</a>
                     
                   </div>
                 
@@ -358,6 +335,12 @@ getRandom：从现有集合中随机获取一个元素。每个元素被返回�
                 <div class="post-prevnext row">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2020/11/04/%E8%87%AA%E5%88%B6NavMesh2D%EF%BC%88%E4%BA%8C%EF%BC%89/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">自制NavMesh2D（二）</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
@@ -500,7 +483,7 @@ getRandom：从现有集合中随机获取一个元素。每个元素被返回�
     var typed = new Typed('#subtitle', {
       strings: [
         '  ',
-        "力扣每日一题 2020年10月31日&nbsp;",
+        "自制NavMesh2D（一）&nbsp;",
       ],
       cursorChar: "_",
       typeSpeed: 70,
