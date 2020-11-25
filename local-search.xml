@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>自制NavMesh2D（四）</title>
+    <link href="/2020/11/12/%E8%87%AA%E5%88%B6NavMesh2D%EF%BC%88%E5%9B%9B%EF%BC%89/"/>
+    <url>/2020/11/12/%E8%87%AA%E5%88%B6NavMesh2D%EF%BC%88%E5%9B%9B%EF%BC%89/</url>
+    
+    <content type="html"><![CDATA[<blockquote><p>图源：<a href="https://www.pixiv.net/artworks/83559708">https://www.pixiv.net/artworks/83559708</a></p></blockquote><h1 id="自制NavMesh2D（四）"><a href="#自制NavMesh2D（四）" class="headerlink" title="自制NavMesh2D（四）"></a>自制NavMesh2D（四）</h1><p>在有了一个简单的NavMesh后，开始回到第一步，构建多边形。</p><h2 id="根据sprite顶点生成"><a href="#根据sprite顶点生成" class="headerlink" title="根据sprite顶点生成"></a>根据sprite顶点生成</h2><p>由于是基于2D所制作的，所以我在这没有选择“光栅化”去获取边界，而是直接拿到sprite的顶点信息，甚至直接拿到三角形的信息，通过给其标记为寻路网格或者障碍物来控制多边形的合成（偷个懒）。</p><p>例如对于一个默认的长方形sprite其拥有顶点与三角形的信息，而这些其实可以直接利用到生成中。</p><p><img src="/images/20201113164607665_30217.png" alt="长方形sprite"></p><p>另外由于如果只是拿到顶点信息，由于其并不是按照顺时针或逆时针排序的，所以仅凭顶点是无法获取多边形数据的（对于较复杂的凹多边形而言），所以需要获得其三角形的列表，其有着顶点之间的关系信息。</p><p>其实如果只是根据这些信息生成多边形，再剖分成三角形，貌似有点多此一举（拿到三角形的信息，生成多边形，再生成三角形），所以对于不需要障碍物的NavMesh就可以直接根据这些三角形转换成需要的寻路三角形进行使用了。<br>当然更普遍的情况是存在障碍物甚至动态障碍物，其中动态障碍物需要能够进行局部的网格重新生成（如果重新生成整张网格其实有很大一部分没有变化，同时会造成不必要的性能开销）。同时为了尽量减少工作量（偷懒），这里我对障碍物的处理是：获取被障碍物覆盖的三角形-&gt;将这些三角形合并成多边形-&gt;进行内外多边形的合并-&gt;剖分成新的三角形列表。</p><p>那么如何获取被覆盖的三角形有哪些呢，由于我没在网上搜到类似资料，所以采用的是最粗暴的遍历法——多变形的每条边与没有检测到的三角形的边检测是否相交，如果相交则将该边对应的两个三角形加入合并列表。</p><p>然后以合并列表中的三角形的一条无邻居的边（以保证该边不是多边形内部边）的起点为起点，绕边缘描绘出多边形。</p><p>例如在下面这个合并三角形列表中，以b边的起点B作为遍历起点，然后找到其终点C，再以C为起点找到D······，就能够描绘出这些三角形构成的多变形了。（此处都已规定除障碍物/内部多边形外都是顺时针排布）</p><p><img src="/images/20201119143456102_29733.png" alt="三角形列表"></p><p>对于这个构造出来的多边形，再使用内外多边形合并的操作，然后进行剖分，就能够得到新的三角形列表了，最后再将这些三角形添加回原三角形列表，更新三角形的相邻关系与ID即可。</p><h2 id="对于越界的障碍物"><a href="#对于越界的障碍物" class="headerlink" title="对于越界的障碍物"></a>对于越界的障碍物</h2><p>障碍物可不会老老实实待在多边形内部，更常见的情况是障碍物会与多边形边界相交。</p><p>如下面绿色的障碍物有一部分再白色地面的外部。</p><p><img src="/images/20201119145951705_22115.png" alt="障碍物与边界相交"></p><p>那么此时要做的就是将这块覆盖的区域“剔除”。</p><p><img src="/images/20201119151012639_9834.png" alt="障碍物与边界相交"></p><p>先从这种最简单的情况考虑，可以看出边界与障碍物的边交于两点，那么剔除后的多边形应为A-&gt;B-&gt;C-&gt;D-&gt;N-&gt;M-&gt;E-&gt;O-&gt;A。<br>此时规定障碍物与多边形的方向相反的好处再次体现出来了，能够根据交点很方便得获得增添的新顶点。</p><p>添加顺序为离边界起点（这里是D）近的边（这里是GM）的起点、交点（这里是N）、终点（M）、内部顶点、较远的边（EF）重复GM的顺序。</p><p>如果多边形的顶点在障碍物的内部的话，则需将该顶点删去。</p><p><img src="/images/20201119152701146_19054.png" alt="顶点在障碍物内部"></p><p>简单的写个脚本来测试</p><p><img src="/images/20201119154634244_9347.png" alt="测试"></p><p>可以看到已经能够正确剔除了。<br>换个情况</p><p><img src="/images/20201119155121348_27991.png" alt="测试"><br><img src="/images/20201119155148041_23255.png" alt="测试"></p><h2 id="对于分割了多边形的障碍物"><a href="#对于分割了多边形的障碍物" class="headerlink" title="对于分割了多边形的障碍物"></a>对于分割了多边形的障碍物</h2><p>还有种情况，那就是一个障碍物分割开了多边形，那么上面这种方法就不行了。<br>在搜索了资料后，最相似的情况便是图形学中的三角形裁剪，可是情况不一样的是一个是求两多边形的交集，一个是求补集，但其思路是差不多的，问题就在于如何找到点之间的关系。<br>这里参考了<a href="https://www.cnblogs.com/lsxqw2004/p/4843417.html?spm=a2c4e.10696291.0.0.4caa19a4RfgZS8">任意多边形切割/裁剪</a>使用链表进行分割的思路。</p><p>如该图所示的障碍物（EFGH）将多边形（ABCD）分割成了两块，分别是A-&gt;e1-&gt;e2-&gt;D 和 B-&gt;C-&gt;e3-&gt;e4。</p><p><img src="/images/20201125104215903_7323.png" alt="分割了多边形的障碍物"></p><p>用链表图表示其中一部分变化就是由</p><p><img src="/images/20201125143855602_14138.png" alt="链表图"></p><p>变成了</p><p><img src="/images/20201125143702449_23854.png" alt="链表图2"></p><p>看得出插入位置在交点所在线的端点中间，且端点为起点还是终点与插入的方向是有关的。如果端点是起点，那么是端点连接交点，如果是终点，则是交点连接端点。<br>如果相邻交点的连线在多边形内，则连接上，而由于多边形规定为顺时针，障碍物为逆时针，所以可以根据相交边的方向来判断。</p><p>综上两点，举例：<br>1、F-&gt;G与A-&gt;B交于e1：<br>如果从障碍物的边的终点看向起点，相交边的起点在左侧，将交点e1插入F-&gt;G间，可以得知左侧端点为起点，那么将A连接上e1，同时根据相交线段的方向知道是进入多边形，所以将交点放入栈暂存。<br>2、F-&gt;G与C-&gt;D交于e2：<br>如果从障碍物的边的终点看向起点，相交边的终点在左侧，将交点e2插入e1-&gt;G间，可以得知左侧端点为终点，那么将e2连接上D，同时根据相交线段的方向知道是离开多边形，如果此时栈内有交点，取出并将该交点（e1）连接上e2。</p><p>由此就构建出了一个由循环链表构成的多边形A-&gt;e1-&gt;e2-&gt;D了，B-&gt;C-&gt;e3-&gt;e4同理。</p><p><img src="/images/20201125150939075_32079.png" alt="构建出了一个由循环链表构成的多边形"></p><p>通过遍历多边形的顶点，解构出两个循环链表便是所需的多边形了。</p><p>可以看到上图将障碍物的顶点链表也包含进来了，原因是有种情况即障碍物的顶点在多边形内部时，需要将该顶点包含进来，而使用链表即可很好解决这些包含进来的顶点之间的关系。</p><p>这块代码写得有点乱完整版就暂时不贴了（</p><p>核心代码</p><pre><code class="hljs c#"><span class="hljs-function"><span class="hljs-keyword">public</span> List&lt;Polygon&gt; <span class="hljs-title">Clips</span>(<span class="hljs-params">Polygon ob</span>)</span><span class="hljs-function"></span>&#123;<span class="hljs-comment">//·············</span>    <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">var</span> node <span class="hljs-keyword">in</span> intersection)    &#123;        <span class="hljs-comment">//查找交点的左侧的点是起点还是终点</span>        <span class="hljs-keyword">if</span> (curObLine.ClassifyPoint(crossLines[node].start) == PointSide.LEFT_SIDE)<span class="hljs-comment">//起点在左侧</span>        &#123;            outerPoints[lineIndex[crossLines[node]]].Next = node;<span class="hljs-comment">//起点连接交点</span>            crossPoint.Push(node);<span class="hljs-comment">//交点放入栈中</span>        &#125;        <span class="hljs-keyword">else</span><span class="hljs-comment">//否则终点在左侧</span>        &#123;            <span class="hljs-keyword">var</span> index = lineIndex[crossLines[node]] == points.Count - <span class="hljs-number">1</span> ? <span class="hljs-number">0</span> : lineIndex[crossLines[node]] + <span class="hljs-number">1</span>;<span class="hljs-comment">//该终点在多边形中的index</span>            node.Next = outerPoints[index];            <span class="hljs-keyword">if</span> (crossPoint.Count &gt; <span class="hljs-number">0</span>)<span class="hljs-comment">//如果栈中有点，即如果该线之前有交点</span>            &#123;                <span class="hljs-keyword">var</span> lastcross = crossPoint.Pop();                lastcross.Next = node;            &#125;        &#125;    &#125;<span class="hljs-comment">//·············</span>&#125;</code></pre><p>再简单的写个测试脚本验证下：</p><p>白色矩形为多边形，红色为障碍物。</p><p><img src="/images/20201125154833195_22421.png" alt="测试"></p><p>进行切割后</p><p><img src="/images/20201125154959778_1951.png" alt="测试"></p><p>如果障碍物遮住了多边形顶点的情况：</p><p><img src="/images/20201125155151773_11675.png" alt="测试"></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Navigation</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>NavMesh</tag>
+      
+      <tag>Navigation</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>自制NavMesh2D（三）</title>
     <link href="/2020/11/08/%E8%87%AA%E5%88%B6NavMesh2D%EF%BC%88%E4%B8%89%EF%BC%89/"/>
     <url>/2020/11/08/%E8%87%AA%E5%88%B6NavMesh2D%EF%BC%88%E4%B8%89%EF%BC%89/</url>
