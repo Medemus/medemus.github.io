@@ -1,811 +1,1696 @@
-
-
 <!DOCTYPE html>
-<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
-
-
-
-<head>
-  <meta charset="UTF-8">
-  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
-  <link rel="icon" type="image/png" href="/img/favicon.png">
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
+<html lang="zh-CN">
+  <head hexo-theme='https://github.com/volantis-x/hexo-theme-volantis/tree/4.3.1'>
+  <meta charset="utf-8">
+  <!-- SEO相关 -->
   
-  <meta name="theme-color" content="#2f4154">
-  <meta name="description" content="">
-  <meta name="author" content="MEUSA">
-  <meta name="keywords" content="">
+    
+  
+  <!-- 渲染优化 -->
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://cdn.jsdelivr.net'>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <link rel="preload" href="/css/first.css" as="style">
+  
+
+  <!-- 页面元数据 -->
+  
   <title>自制NavMesh2D（二） - MBLOG</title>
-
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
-
-
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/github-markdown-css/4.0.0/github-markdown.min.css" />
-  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
-
   
-    
-    
-      
-      <link  rel="stylesheet" href="https://cdn.staticfile.org/highlight.js/10.0.0/styles/railscasts.min.css" />
-    
+    <meta name="keywords" content="NavMesh,Navigation">
   
 
   
 
+  <!-- feed -->
+  
 
-<!-- 主题依赖的图标库，不要自行修改 -->
+  <!-- import meta -->
+  
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+  <!-- link -->
+  
+
+  <!-- import link -->
+  
+
+  
+    
+<link rel="stylesheet" href="/css/first.css">
+
+  
+
+  
+  <link rel="stylesheet" href="/css/style.css" media="print" onload="this.media='all';this.onload=null">
+  <noscript><link rel="stylesheet" href="/css/style.css"></noscript>
+  
+
+  <script id="loadcss"></script>
+
+  
+<script>
+if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMode))
+    document.write(
+	'<style>'+
+		'html{'+
+			'overflow-x: hidden !important;'+
+			'overflow-y: hidden !important;'+
+		'}'+
+		'.kill-ie{'+
+			'text-align:center;'+
+			'height: 100%;'+
+			'margin-top: 15%;'+
+			'margin-bottom: 5500%;'+
+		'}'+
+	'</style>'+
+    '<div class="kill-ie">'+
+        '<h1><b>抱歉，您的浏览器无法访问本站</b></h1>'+
+        '<h3>微软已经于2016年终止了对 Internet Explorer (IE) 10 及更早版本的支持，<br/>'+
+        '继续使用存在极大的安全隐患，请使用当代主流的浏览器进行访问。</h3><br/>'+
+        '<a target="_blank" rel="noopener" href="https://www.microsoft.com/zh-cn/WindowsForBusiness/End-of-IE-support"><strong>了解详情 ></strong></a>'+
+    '</div>');
+</script>
 
 
+<noscript>
+	<style>
+		html{
+			overflow-x: hidden !important;
+			overflow-y: hidden !important;
+		}
+		.kill-noscript{
+			text-align:center;
+			height: 100%;
+			margin-top: 15%;
+			margin-bottom: 5500%;
+		}
+	</style>
+    <div class="kill-noscript">
+        <h1><b>抱歉，您的浏览器无法访问本站</b></h1>
+        <h3>本页面需要浏览器支持（启用）JavaScript</h3><br/>
+        <a target="_blank" rel="noopener" href="https://www.baidu.com/s?wd=启用JavaScript"><strong>了解详情 ></strong></a>
+    </div>
+</noscript>
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+</head>
 
+  <body>
+    
 
-<link  rel="stylesheet" href="/css/main.css" />
-
-<!-- 自定义样式保持在最底部 -->
-
-
-  <script  src="/js/utils.js" ></script>
-  <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 5.2.0"></head>
-
-
-<body>
-  <header style="height: 70vh;">
-    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
-  <div class="container">
-    <a class="navbar-brand"
-       href="/">&nbsp;<strong>MBLOG</strong>&nbsp;</a>
-
-    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <div class="animated-icon"><span></span><span></span><span></span></div>
-    </button>
-
-    <!-- Collapsible content -->
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav ml-auto text-center">
+<header id="l_header" class="l_header auto shadow blur show" style='opacity: 0' >
+  <div class='container'>
+  <div id='wrapper'>
+    <div class='nav-sub'>
+      <p class="title"></p>
+      <ul class='switcher nav-list-h m-phone' id="pjax-header-nav-list">
+        <li><a id="s-comment" class="fas fa-comments fa-fw" target="_self" href='javascript:void(0)'></a></li>
         
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/">
-                <i class="iconfont icon-home-fill"></i>
-                首页
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/archives/">
-                <i class="iconfont icon-archive-fill"></i>
-                归档
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/categories/">
-                <i class="iconfont icon-category-fill"></i>
-                分类
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/tags/">
-                <i class="iconfont icon-tags-fill"></i>
-                标签
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/about/">
-                <i class="iconfont icon-user-fill"></i>
-                关于
-              </a>
-            </li>
-          
-        
-        
-          <li class="nav-item" id="search-btn">
-            <a class="nav-link" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
-                class="iconfont icon-search"></i>&nbsp;</a>
-          </li>
-        
-        
-          <li class="nav-item" id="color-toggle-btn">
-            <a class="nav-link" href="javascript:">&nbsp;<i
-                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
-          </li>
+          <li><a id="s-toc" class="s-toc fas fa-list fa-fw" target="_self" href='javascript:void(0)'></a></li>
         
       </ul>
     </div>
-  </div>
-</nav>
-
-    <div class="banner intro-2" id="background" parallax=true
-         style="background: url('/img/bg2.jpg') no-repeat center center;
-           background-size: cover;">
-      <div class="full-bg-img">
-        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
-          <div class="container page-header text-center fade-in-up">
-            <span class="h2" id="subtitle">
-              
-            </span>
-
-            
-              <div class="mt-3">
-  
-  
-    <span class="post-meta">
-      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2020-11-04 20:56" pubdate>
-        2020年11月4日 晚上
-      </time>
-    </span>
-  
-</div>
-
-<div class="mt-1">
-  
-    
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-chart"></i>
-      2.3k 字
-    </span>
-  
-
-  
-    
-    <span class="post-meta mr-2">
-      <i class="iconfont icon-clock-fill"></i>
+		<div class="nav-main">
       
-      
-      33
-       分钟
-    </span>
-  
-
-  
-  
-</div>
-
-            
-          </div>
-
+        
+        <a class="title flat-box" target="_self" href='/'>
           
-        </div>
+            <img no-lazy class='logo' src='https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/blog/Logo-NavBar@3x.png'/>
+          
+          
+          
+        </a>
+      
+
+			<div class='menu navigation'>
+				<ul class='nav-list-h m-pc'>
+          
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+          
+            
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+          
+				</ul>
+			</div>
+
+      <div class="m_search">
+        <form name="searchform" class="form u-search-form">
+          <i class="icon fas fa-search fa-fw"></i>
+          <input type="text" class="input u-search-input" placeholder="Search..." />
+        </form>
+      </div>
+
+			<ul class='switcher nav-list-h m-phone'>
+				
+					<li><a class="s-search fas fa-search fa-fw" target="_self" href='javascript:void(0)'></a></li>
+				
+				<li>
+          <a class="s-menu fas fa-bars fa-fw" target="_self" href='javascript:void(0)'></a>
+          <ul class="menu-phone list-v navigation white-box">
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/
+                  
+                  
+                  
+                    id="home"
+                  >
+                  <i class='fas fa-rss fa-fw'></i>博客
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/categories/
+                  
+                  
+                  
+                    id="categories"
+                  >
+                  <i class='fas fa-folder-open fa-fw'></i>分类
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/tags/
+                  
+                  
+                  
+                    id="tags"
+                  >
+                  <i class='fas fa-tags fa-fw'></i>标签
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/archives/
+                  
+                  
+                  
+                    id="archives"
+                  >
+                  <i class='fas fa-archive fa-fw'></i>归档
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/friends/
+                  
+                  
+                  
+                    id="friends"
+                  >
+                  <i class='fas fa-link fa-fw'></i>友链
+                </a>
+                
+              </li>
+            
+          
+            
+              
+            
+              <li>
+                <a class="menuitem flat-box faa-parent animated-hover" href=/about/
+                  
+                  
+                  
+                    id="about"
+                  >
+                  <i class='fas fa-info-circle fa-fw'></i>关于
+                </a>
+                
+              </li>
+            
+          
+            
+          </ul>
+        </li>
+			</ul>
+		</div>
+	</div>
+  </div>
+</header>
+
+    <div id="l_body">
+      <div id="l_cover">
+  
+    
+        <div id="full" class='cover-wrapper post dock' style="display: none;">
+          
+            <div class='cover-bg lazyload placeholder' data-bg="https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture"></div>
+          
+          <div class='cover-body'>
+  <div class='top'>
+    
+    
+      <p class="title">Volantis</p>
+    
+    
+  </div>
+  <div class='bottom'>
+    <div class='menu navigation'>
+      <div class='list-h'>
+        
+          
+            <a href="/v4/getting-started/"
+              
+              
+              id="v4getting-started">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f5c3.svg'><p>文档</p>
+            </a>
+          
+            <a href="/faqs/"
+              
+              
+              id="faqs">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f516.svg'><p>帮助</p>
+            </a>
+          
+            <a href="/examples/"
+              
+              
+              id="examples">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f396.svg'><p>示例</p>
+            </a>
+          
+            <a href="/contributors/"
+              
+              
+              id="contributors">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f389.svg'><p>社区</p>
+            </a>
+          
+            <a href="/archives/"
+              
+              
+              id="archives">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f4f0.svg'><p>博客</p>
+            </a>
+          
+            <a href="https://github.com/volantis-x/hexo-theme-volantis/"
+              
+              
+              id="https:githubcomvolantis-xhexo-theme-volantis">
+              <img src='https://cdn.jsdelivr.net/gh/twitter/twemoji@13.0/assets/svg/1f9ec.svg'><p>源码</p>
+            </a>
+          
+        
       </div>
     </div>
-  </header>
+  </div>
+</div>
 
-  <main>
+          <div id="scroll-down" style="display: none;"><i class="fa fa-chevron-down scroll-down-effects"></i></div>
+        </div>
     
-      
+  
+  </div>
 
-<div class="container-fluid">
-  <div class="row">
-    <div class="d-none d-lg-block col-lg-2"></div>
-    <div class="col-lg-8 nopadding-md">
-      <div class="container nopadding-md" id="board-ctn">
-        <div class="py-5" id="board">
-          <article class="post-content mx-auto" id="post">
-            <!-- SEO header -->
-            <h1 style="display: none">自制NavMesh2D（二）</h1>
+      <div id="safearea">
+        <div class="body-wrapper" id="pjax-container">
+          
+
+<div class='l_main'>
+  <article class="article post white-box reveal md shadow article-type-post" id="post" itemscope itemprop="blogPost">
+  
+
+
+  
+  <div class="article-meta" id="top">
+    
+    
+    
+      <h1 class="title">
+        自制NavMesh2D（二）
+      </h1>
+      <div class='new-meta-box'>
+        
+          
             
-            <div class="markdown-body" id="post-body">
-              <blockquote>
+<div class='new-meta-item author'>
+  <a class='author' href="/" rel="nofollow">
+    <img no-lazy src="">
+    <p>请设置文章作者</p>
+  </a>
+</div>
+
+          
+        
+          
+            
+  <div class='new-meta-item category'>
+    <a class='notlink'>
+      <i class="fas fa-folder-open fa-fw" aria-hidden="true"></i>
+      <a class="category-link" href="/categories/Navigation/">Navigation</a>
+    </a>
+  </div>
+
+
+          
+        
+          
+            <div class="new-meta-item date">
+  <a class='notlink'>
+    <i class="fas fa-calendar-alt fa-fw" aria-hidden="true"></i>
+    <p>发布于：2020年11月4日</p>
+  </a>
+</div>
+
+          
+        
+          
+            
+  <div class="new-meta-item browse leancloud">
+    <a class='notlink'>
+      
+      <div id="lc-pv" data-title="自制NavMesh2D（二）" data-path="/2020/11/04/%E8%87%AA%E5%88%B6NavMesh2D%EF%BC%88%E4%BA%8C%EF%BC%89/">
+        <i class="fas fa-eye fa-fw" aria-hidden="true"></i>
+        <span id='number'><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span>
+        次浏览
+      </div>
+    </a>
+  </div>
+
+
+          
+        
+      </div>
+    
+  </div>
+
+
+  
+  
+  <blockquote>
 <p>图源：<a target="_blank" rel="noopener" href="https://www.pixiv.net/artworks/85217491">https://www.pixiv.net/artworks/85217491</a></p>
 </blockquote>
 <h1 id="自制NavMesh2D（二）"><a href="#自制NavMesh2D（二）" class="headerlink" title="自制NavMesh2D（二）"></a>自制NavMesh2D（二）</h1><p>根据上面的学习，能够大致了解一个NavMesh2D的制作流程了，所以接下来就是上手实践。<br>在此参考了<a target="_blank" rel="noopener" href="http://www.luzexi.com/2013/10/06/Unity3D%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1NavMesh%E5%AF%BB%E8%B7%AF">Unity3D架构设计NavMesh寻路</a>的设计。</p>
 <h2 id="根据顶点生成多边形"><a href="#根据顶点生成多边形" class="headerlink" title="根据顶点生成多边形"></a>根据顶点生成多边形</h2><p>由于所制作的为纯2D，是可以由sprite的顶点信息获取边缘信息的，所以在此我想先跳过光栅化的阶段，先行从多边形生成开始。</p>
 <p>在此需要制定多边形类的信息，在此设定的多边形类的参数为List&lt;Vector&gt;类型的顶点列表。</p>
-<div class="hljs"><pre><code class="hljs c#"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Polygon</span>
-    &#123;
-        <span class="hljs-keyword">public</span> List&lt;Vector2&gt; points;
-
-        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Polygon</span>(<span class="hljs-params"></span>)</span>
-<span class="hljs-function"></span>        &#123;
-            points = <span class="hljs-keyword">new</span> List&lt;Vector2&gt;();
-        &#125;
-        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Polygon</span>(<span class="hljs-params">List&lt;Vector2&gt; vertices</span>)</span>
-<span class="hljs-function"></span>        &#123;
-            points = <span class="hljs-keyword">new</span> List&lt;Vector2&gt;();
-            <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">var</span> vertex <span class="hljs-keyword">in</span> vertices)
-            &#123;
-                points.Add(vertex);
-            &#125;
-        &#125;
-        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Polygon</span>(<span class="hljs-params">Vector2[] vertices</span>)</span>
-<span class="hljs-function"></span>        &#123;
-            points = <span class="hljs-keyword">new</span> List&lt;Vector2&gt;();
-            <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">var</span> vertex <span class="hljs-keyword">in</span> vertices)
-            &#123;
-                points.Add(vertex);
-            &#125;
-        &#125;
-    &#125;</code></pre></div>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Polygon</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">public</span> List&lt;Vector2&gt; points;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Polygon</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            points = <span class="keyword">new</span> List&lt;Vector2&gt;();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Polygon</span>(<span class="params">List&lt;Vector2&gt; vertices</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            points = <span class="keyword">new</span> List&lt;Vector2&gt;();</span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> vertex <span class="keyword">in</span> vertices)</span><br><span class="line">            &#123;</span><br><span class="line">                points.Add(vertex);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Polygon</span>(<span class="params">Vector2[] vertices</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            points = <span class="keyword">new</span> List&lt;Vector2&gt;();</span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> vertex <span class="keyword">in</span> vertices)</span><br><span class="line">            &#123;</span><br><span class="line">                points.Add(vertex);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
 <p>有了点就该有线了，那么线应该就是由一个<strong>起点</strong>与一个<strong>终点</strong>所组成。</p>
-<div class="hljs"><pre><code class="hljs c#"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Line</span>
-    &#123;
-        <span class="hljs-keyword">public</span> Vector2 start;
-        <span class="hljs-keyword">public</span> Vector2 end;
-
-        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Line</span>(<span class="hljs-params">Vector2 start, Vector2 end</span>)</span>
-<span class="hljs-function"></span>        &#123;
-            <span class="hljs-keyword">this</span>.start = start;
-            <span class="hljs-keyword">this</span>.end = end;
-        &#125;
-    &#125;</code></pre></div>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Line</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">public</span> Vector2 start;</span><br><span class="line">        <span class="keyword">public</span> Vector2 end;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Line</span>(<span class="params">Vector2 start, Vector2 end</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">this</span>.start = start;</span><br><span class="line">            <span class="keyword">this</span>.end = end;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
 <p>然后只要规定一个连线顺序（在这我规定的是外多边形为顺时针，内多边形为逆时针），就可以描述一个多边形了。</p>
 <p>用Gizmo来绘制测试一下</p>
-<p><img src="/images/20201110173849572_32046.png" srcset="/img/loading.gif" alt="由点组成多边形"></p>
+<p><img src="/images/20201110173849572_32046.png" class="lazyload" data-srcset="/images/20201110173849572_32046.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" alt="由点组成多边形"></p>
 <h2 id="对单个多边形进行三角形剖分"><a href="#对单个多边形进行三角形剖分" class="headerlink" title="对单个多边形进行三角形剖分"></a>对单个多边形进行三角形剖分</h2><p>多边形有了后，就该着手进行剖分了，先不考虑存在空洞、相交的情况。</p>
 <p>为了进行剖分，首先需要构建三角形类，三角形的组成和多边形类似，但为了进行一些操作所以需要更多的参数。</p>
-<div class="hljs"><pre><code class="hljs c#"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Triangle</span>
-    &#123;
-        <span class="hljs-keyword">public</span> Vector2[] points;<span class="hljs-comment">//顶点列表</span>
-        <span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span> ID;<span class="hljs-comment">//每个三角形的ID</span>
-        <span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span>[] neighborID;<span class="hljs-comment">//三角形邻居节点ID</span>
-        <span class="hljs-keyword">public</span> Vector2 center;<span class="hljs-comment">//中心点</span>
-        
-        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Triangle</span>(<span class="hljs-params"></span>)</span>
-<span class="hljs-function"></span>        &#123;
-            points = <span class="hljs-keyword">new</span> Vector2[<span class="hljs-number">3</span>];
-            neighborID = <span class="hljs-keyword">new</span> <span class="hljs-built_in">int</span>[] &#123; <span class="hljs-number">-1</span>, <span class="hljs-number">-1</span>, <span class="hljs-number">-1</span> &#125;;
-            center = Vector2.zero;
-        &#125;
-     
-        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Triangle</span>(<span class="hljs-params">Vector2 pos1,Vector2 pos2,Vector2 pos3,<span class="hljs-built_in">int</span> id</span>)</span>
-<span class="hljs-function"></span>        &#123;
-            points = <span class="hljs-keyword">new</span>[] &#123;pos1, pos2, pos3&#125;;
-            ID = id;
-            neighborID = <span class="hljs-keyword">new</span>[] &#123;<span class="hljs-number">-1</span>, <span class="hljs-number">-1</span>, <span class="hljs-number">-1</span>&#125;;
-
-            center.x = (points[<span class="hljs-number">0</span>].x + points[<span class="hljs-number">1</span>].x + points[<span class="hljs-number">2</span>].x) / <span class="hljs-number">3</span>;
-            center.y = (points[<span class="hljs-number">0</span>].y + points[<span class="hljs-number">1</span>].y + points[<span class="hljs-number">2</span>].y) / <span class="hljs-number">3</span>;
-        &#125;
-    &#125;</code></pre></div>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Triangle</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">public</span> Vector2[] points;<span class="comment">//顶点列表</span></span><br><span class="line">        <span class="keyword">public</span> <span class="built_in">int</span> ID;<span class="comment">//每个三角形的ID</span></span><br><span class="line">        <span class="keyword">public</span> <span class="built_in">int</span>[] neighborID;<span class="comment">//三角形邻居节点ID</span></span><br><span class="line">        <span class="keyword">public</span> Vector2 center;<span class="comment">//中心点</span></span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Triangle</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            points = <span class="keyword">new</span> Vector2[<span class="number">3</span>];</span><br><span class="line">            neighborID = <span class="keyword">new</span> <span class="built_in">int</span>[] &#123; <span class="number">-1</span>, <span class="number">-1</span>, <span class="number">-1</span> &#125;;</span><br><span class="line">            center = Vector2.zero;</span><br><span class="line">        &#125;</span><br><span class="line">     </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Triangle</span>(<span class="params">Vector2 pos1,Vector2 pos2,Vector2 pos3,<span class="built_in">int</span> id</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            points = <span class="keyword">new</span>[] &#123;pos1, pos2, pos3&#125;;</span><br><span class="line">            ID = id;</span><br><span class="line">            neighborID = <span class="keyword">new</span>[] &#123;<span class="number">-1</span>, <span class="number">-1</span>, <span class="number">-1</span>&#125;;</span><br><span class="line"></span><br><span class="line">            center.x = (points[<span class="number">0</span>].x + points[<span class="number">1</span>].x + points[<span class="number">2</span>].x) / <span class="number">3</span>;</span><br><span class="line">            center.y = (points[<span class="number">0</span>].y + points[<span class="number">1</span>].y + points[<span class="number">2</span>].y) / <span class="number">3</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
 <p>在剖分前，还需要几个工具类进行辅助操作。</p>
 <p>在工具类Util中，添加以下方法：</p>
-<div class="hljs"><pre><code class="hljs c#"><span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;summary&gt;</span></span>
-<span class="hljs-comment"><span class="hljs-doctag">///</span> 获取多边形在三角形内部的点</span>
-<span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;/summary&gt;</span></span>
-<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-built_in">bool</span> <span class="hljs-title">TryGetInnerPoints</span>(<span class="hljs-params">Triangle triangle,Polygon polygon,<span class="hljs-keyword">out</span> List&lt;<span class="hljs-built_in">int</span>&gt; res</span>)</span>
-<span class="hljs-function"></span>&#123;
-    res = <span class="hljs-keyword">new</span> List&lt;<span class="hljs-built_in">int</span>&gt;();
-    List&lt;Vector2&gt; points = polygon.points;
-    HashSet&lt;Vector2&gt; trianglePoints = <span class="hljs-keyword">new</span> HashSet&lt;Vector2&gt;(triangle.points);
-    <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>; i &lt; points.Count; i++)
-    &#123;
-        <span class="hljs-keyword">if</span> (!trianglePoints.Contains(points[i]))
-        &#123;
-            <span class="hljs-keyword">if</span> (MUtil.IsPointIn(points[i], triangle))<span class="hljs-comment">//是否有点在三角形内部</span>
-            &#123;
-                res.Add(i);
-            &#125;
-        &#125;
-    &#125;
-    <span class="hljs-keyword">if</span> (res.Count &gt; <span class="hljs-number">0</span>)
-        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-&#125;</code></pre></div>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 获取多边形在三角形内部的点</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="built_in">bool</span> <span class="title">TryGetInnerPoints</span>(<span class="params">Triangle triangle,Polygon polygon,<span class="keyword">out</span> List&lt;<span class="built_in">int</span>&gt; res</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    res = <span class="keyword">new</span> List&lt;<span class="built_in">int</span>&gt;();</span><br><span class="line">    List&lt;Vector2&gt; points = polygon.points;</span><br><span class="line">    HashSet&lt;Vector2&gt; trianglePoints = <span class="keyword">new</span> HashSet&lt;Vector2&gt;(triangle.points);</span><br><span class="line">    <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; points.Count; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (!trianglePoints.Contains(points[i]))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (MUtil.IsPointIn(points[i], triangle))<span class="comment">//是否有点在三角形内部</span></span><br><span class="line">            &#123;</span><br><span class="line">                res.Add(i);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (res.Count &gt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<div class="hljs"><pre><code class="hljs c#"><span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;summary&gt;</span></span>
-<span class="hljs-comment"><span class="hljs-doctag">///</span> 指定点是否在三角形中</span>
-<span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;/summary&gt;</span></span>
-<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-built_in">bool</span> <span class="hljs-title">IsPointIn</span>(<span class="hljs-params">Vector2 point,Triangle triangle</span>)</span>
-<span class="hljs-function"></span>&#123;
-    Vector3 AB = triangle.points[<span class="hljs-number">1</span>] - triangle.points[<span class="hljs-number">0</span>];
-    Vector3 AC = triangle.points[<span class="hljs-number">2</span>] - triangle.points[<span class="hljs-number">0</span>];
-    Vector3 AP = point - triangle.points[<span class="hljs-number">0</span>];
-
-    <span class="hljs-built_in">float</span> ABAB = Vector3.Dot(AB, AB);
-    <span class="hljs-built_in">float</span> ABAC = Vector3.Dot(AB, AC);
-    <span class="hljs-built_in">float</span> ABAP = Vector3.Dot(AB, AP);
-    <span class="hljs-built_in">float</span> ACAC = Vector3.Dot(AC, AC);
-    <span class="hljs-built_in">float</span> ACAP = Vector3.Dot(AC, AP);
-
-    <span class="hljs-built_in">float</span> inverDeno = <span class="hljs-number">1</span> / (ABAB * ACAC - ABAC * ABAC);
-
-    <span class="hljs-built_in">float</span> u = (ACAC * ABAP - ABAC * ACAP) * inverDeno;
-    <span class="hljs-keyword">if</span> (u &lt; <span class="hljs-number">0</span> || u &gt; <span class="hljs-number">1</span>)
-    &#123;
-        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    &#125;
-    <span class="hljs-built_in">float</span> v = (ABAB * ACAP - ABAC * ABAP) * inverDeno;
-    <span class="hljs-keyword">if</span> (v &lt; <span class="hljs-number">0</span> || v &gt; <span class="hljs-number">1</span>)
-    &#123;
-        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-    &#125;
-
-    <span class="hljs-keyword">return</span> u + v &lt;= <span class="hljs-number">1</span>;
-&#125;</code></pre></div>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 指定点是否在三角形中</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="built_in">bool</span> <span class="title">IsPointIn</span>(<span class="params">Vector2 point,Triangle triangle</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Vector3 AB = triangle.points[<span class="number">1</span>] - triangle.points[<span class="number">0</span>];</span><br><span class="line">    Vector3 AC = triangle.points[<span class="number">2</span>] - triangle.points[<span class="number">0</span>];</span><br><span class="line">    Vector3 AP = point - triangle.points[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">    <span class="built_in">float</span> ABAB = Vector3.Dot(AB, AB);</span><br><span class="line">    <span class="built_in">float</span> ABAC = Vector3.Dot(AB, AC);</span><br><span class="line">    <span class="built_in">float</span> ABAP = Vector3.Dot(AB, AP);</span><br><span class="line">    <span class="built_in">float</span> ACAC = Vector3.Dot(AC, AC);</span><br><span class="line">    <span class="built_in">float</span> ACAP = Vector3.Dot(AC, AP);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">float</span> inverDeno = <span class="number">1</span> / (ABAB * ACAC - ABAC * ABAC);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">float</span> u = (ACAC * ABAP - ABAC * ACAP) * inverDeno;</span><br><span class="line">    <span class="keyword">if</span> (u &lt; <span class="number">0</span> || u &gt; <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">float</span> v = (ABAB * ACAP - ABAC * ABAP) * inverDeno;</span><br><span class="line">    <span class="keyword">if</span> (v &lt; <span class="number">0</span> || v &gt; <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> u + v &lt;= <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>在三角形类中，添加方法：</p>
-<div class="hljs"><pre><code class="hljs c#"><span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;summary&gt;</span></span>
-<span class="hljs-comment"><span class="hljs-doctag">///</span> 获取三角形的指定边</span>
-<span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;/summary&gt;</span></span>
-<span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;param name=&quot;index&quot;&gt;</span><span class="hljs-doctag">&lt;/param&gt;</span></span>
-<span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;returns&gt;</span><span class="hljs-doctag">&lt;/returns&gt;</span></span>
-<span class="hljs-function"><span class="hljs-keyword">public</span> Line <span class="hljs-title">GetLineByIndex</span>(<span class="hljs-params"><span class="hljs-built_in">int</span> index</span>)</span>
-<span class="hljs-function"></span>&#123;
-    Line line;
-
-    <span class="hljs-keyword">switch</span> (index)
-    &#123;
-        <span class="hljs-keyword">case</span> <span class="hljs-number">0</span>:
-            line = <span class="hljs-keyword">new</span> Line(<span class="hljs-keyword">this</span>.points[<span class="hljs-number">0</span>], <span class="hljs-keyword">this</span>.points[<span class="hljs-number">1</span>]);
-            <span class="hljs-keyword">break</span>;
-        <span class="hljs-keyword">case</span> <span class="hljs-number">1</span>:
-            line = <span class="hljs-keyword">new</span> Line(<span class="hljs-keyword">this</span>.points[<span class="hljs-number">1</span>], <span class="hljs-keyword">this</span>.points[<span class="hljs-number">2</span>]);
-            <span class="hljs-keyword">break</span>;
-        <span class="hljs-keyword">case</span> <span class="hljs-number">2</span>:
-            line = <span class="hljs-keyword">new</span> Line(<span class="hljs-keyword">this</span>.points[<span class="hljs-number">2</span>], <span class="hljs-keyword">this</span>.points[<span class="hljs-number">0</span>]);
-            <span class="hljs-keyword">break</span>;
-        <span class="hljs-literal">default</span>:
-            line = <span class="hljs-keyword">new</span> Line(<span class="hljs-keyword">this</span>.points[<span class="hljs-number">0</span>], <span class="hljs-keyword">this</span>.points[<span class="hljs-number">1</span>]);
-            <span class="hljs-keyword">break</span>;
-    &#125;
-
-    <span class="hljs-keyword">return</span> line;
-&#125;</code></pre></div>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 获取三角形的指定边</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name=&quot;index&quot;&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Line <span class="title">GetLineByIndex</span>(<span class="params"><span class="built_in">int</span> index</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Line line;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">switch</span> (index)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">            line = <span class="keyword">new</span> Line(<span class="keyword">this</span>.points[<span class="number">0</span>], <span class="keyword">this</span>.points[<span class="number">1</span>]);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">            line = <span class="keyword">new</span> Line(<span class="keyword">this</span>.points[<span class="number">1</span>], <span class="keyword">this</span>.points[<span class="number">2</span>]);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">            line = <span class="keyword">new</span> Line(<span class="keyword">this</span>.points[<span class="number">2</span>], <span class="keyword">this</span>.points[<span class="number">0</span>]);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="literal">default</span>:</span><br><span class="line">            line = <span class="keyword">new</span> Line(<span class="keyword">this</span>.points[<span class="number">0</span>], <span class="keyword">this</span>.points[<span class="number">1</span>]);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> line;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>为了获取三角形之间的关系，所以需要有</p>
-<div class="hljs"><pre><code class="hljs c#"><span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;summary&gt;</span></span>
-<span class="hljs-comment"><span class="hljs-doctag">///</span> 获取与指定三角形相邻的边</span>
-<span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;/summary&gt;</span></span>
-<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-built_in">bool</span> <span class="hljs-title">TryGetNeighbor</span>(<span class="hljs-params">Triangle triangle,<span class="hljs-keyword">out</span> <span class="hljs-built_in">int</span> res</span>)</span>
-<span class="hljs-function"></span>&#123;
-    <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">3</span>; i++)
-    &#123;
-        <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> j = <span class="hljs-number">0</span>; j &lt; <span class="hljs-number">3</span>; j++)
-        &#123;
-            <span class="hljs-keyword">if</span> (GetLineByIndex(i).Equals(triangle.GetLineByIndex(j)))
-            &#123;
-                res = i;
-                <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
-            &#125;
-        &#125;
-    &#125;
-
-    res = <span class="hljs-number">-1</span>;
-    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-&#125;</code></pre></div>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 获取与指定三角形相邻的边</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="built_in">bool</span> <span class="title">TryGetNeighbor</span>(<span class="params">Triangle triangle,<span class="keyword">out</span> <span class="built_in">int</span> res</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="built_in">int</span> j = <span class="number">0</span>; j &lt; <span class="number">3</span>; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (GetLineByIndex(i).Equals(triangle.GetLineByIndex(j)))</span><br><span class="line">            &#123;</span><br><span class="line">                res = i;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    res = <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>由此就可以进行接下来的剖分操作了。</p>
-<div class="hljs"><pre><code class="hljs c#"><span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;summary&gt;</span></span>
-<span class="hljs-comment"><span class="hljs-doctag">///</span> 进行切耳三角剖分</span>
-<span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;/summary&gt;</span></span>
-<span class="hljs-function"><span class="hljs-keyword">public</span> List&lt;Triangle&gt; <span class="hljs-title">EarCliping</span>(<span class="hljs-params"></span>)</span>
-<span class="hljs-function"></span>&#123;
-    Clockwise();<span class="hljs-comment">//进行一次顺时针排序，以保证顺序</span>
-    List&lt;Triangle&gt; res = <span class="hljs-keyword">new</span> List&lt;Triangle&gt;();
-    List&lt;Vector2&gt; pointsTmp = <span class="hljs-keyword">new</span> List&lt;Vector2&gt;(points);
-    <span class="hljs-built_in">int</span> tmp = <span class="hljs-number">10000</span>;<span class="hljs-comment">//避免出现错误导致死循环死机而设置的最大循环上限数</span>
-    <span class="hljs-built_in">int</span> id = <span class="hljs-number">0</span>;
-    <span class="hljs-keyword">while</span> (pointsTmp.Count &gt; <span class="hljs-number">3</span> &amp;&amp; tmp &gt; <span class="hljs-number">0</span>)<span class="hljs-comment">//当未剖分的顶点在三个以上时</span>
-    &#123;
-        tmp--;
-        <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>; i &lt; pointsTmp.Count; ++i)
-        &#123;
-            Triangle triangle = <span class="hljs-keyword">new</span> Triangle(pointsTmp[i - <span class="hljs-number">1</span> &lt; <span class="hljs-number">0</span> ? pointsTmp.Count - <span class="hljs-number">1</span>:i<span class="hljs-number">-1</span>], pointsTmp[i],pointsTmp[i + <span class="hljs-number">1</span> &gt;= pointsTmp.Count ? <span class="hljs-number">0</span> : i + <span class="hljs-number">1</span>],<span class="hljs-number">0</span>);<span class="hljs-comment">//以i为中间顶点设置三角形</span>
-            
-            <span class="hljs-keyword">if</span>(triangle.GetLineByIndex(<span class="hljs-number">0</span>).ClassifyPoint(triangle.center) != PointSide.LEFT_SIDE)<span class="hljs-comment">//如果构成的三角形的中心不在线的内侧，就代表这是个凹点</span>
-                <span class="hljs-keyword">continue</span>;
-            <span class="hljs-keyword">if</span> (!MUtil.TryGetInnerPoints(triangle,<span class="hljs-keyword">this</span>, <span class="hljs-keyword">out</span> List&lt;<span class="hljs-built_in">int</span>&gt; inners))<span class="hljs-comment">//如果这个三角形内没有其他点，那就是耳朵</span>
-            &#123;
-                triangle.ID = id;
-                ++id;
-                res.Add(triangle);<span class="hljs-comment">//添加这个耳朵三角形</span>
-                pointsTmp.RemoveAt(i);<span class="hljs-comment">//从原多边形中裁去</span>
-                <span class="hljs-keyword">break</span>;
-            &#125;
-        &#125;
-    &#125;
-    Triangle last = <span class="hljs-keyword">new</span> Triangle(pointsTmp[<span class="hljs-number">0</span>],pointsTmp[<span class="hljs-number">1</span>],pointsTmp[<span class="hljs-number">2</span>],id);<span class="hljs-comment">//将最后三个顶点组成三角形</span>
-    res.Add(last);
-
-    <span class="hljs-comment">/*for (int i = 0; i &lt; res.Count; i++)</span>
-<span class="hljs-comment">    &#123;</span>
-<span class="hljs-comment">        var tri = res[i];</span>
-<span class="hljs-comment">        for (int j = 0; j &lt; res.Count; j++)</span>
-<span class="hljs-comment">        &#123;</span>
-<span class="hljs-comment">            var triNext = res[j];</span>
-<span class="hljs-comment">            if(tri.ID == triNext.ID)</span>
-<span class="hljs-comment">                continue;</span>
-<span class="hljs-comment">            if (tri.TryGetNeighbor(triNext, out int index))</span>
-<span class="hljs-comment">            &#123;</span>
-<span class="hljs-comment">                tri.SetNeighbor(index,triNext.ID);</span>
-<span class="hljs-comment">            &#125;</span>
-<span class="hljs-comment">            </span>
-<span class="hljs-comment">        &#125;</span>
-<span class="hljs-comment">    &#125;*/</span>
-    MUtil.FindNeiborgh(res);<span class="hljs-comment">//将上面查找并设置邻居的代码封装到工具类中了</span>
-    <span class="hljs-keyword">return</span> res;
-&#125;</code></pre></div>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 进行切耳三角剖分</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> List&lt;Triangle&gt; <span class="title">EarCliping</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Clockwise();<span class="comment">//进行一次顺时针排序，以保证顺序</span></span><br><span class="line">    List&lt;Triangle&gt; res = <span class="keyword">new</span> List&lt;Triangle&gt;();</span><br><span class="line">    List&lt;Vector2&gt; pointsTmp = <span class="keyword">new</span> List&lt;Vector2&gt;(points);</span><br><span class="line">    <span class="built_in">int</span> tmp = <span class="number">10000</span>;<span class="comment">//避免出现错误导致死循环死机而设置的最大循环上限数</span></span><br><span class="line">    <span class="built_in">int</span> id = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (pointsTmp.Count &gt; <span class="number">3</span> &amp;&amp; tmp &gt; <span class="number">0</span>)<span class="comment">//当未剖分的顶点在三个以上时</span></span><br><span class="line">    &#123;</span><br><span class="line">        tmp--;</span><br><span class="line">        <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; pointsTmp.Count; ++i)</span><br><span class="line">        &#123;</span><br><span class="line">            Triangle triangle = <span class="keyword">new</span> Triangle(pointsTmp[i - <span class="number">1</span> &lt; <span class="number">0</span> ? pointsTmp.Count - <span class="number">1</span>:i<span class="number">-1</span>], pointsTmp[i],pointsTmp[i + <span class="number">1</span> &gt;= pointsTmp.Count ? <span class="number">0</span> : i + <span class="number">1</span>],<span class="number">0</span>);<span class="comment">//以i为中间顶点设置三角形</span></span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span>(triangle.GetLineByIndex(<span class="number">0</span>).ClassifyPoint(triangle.center) != PointSide.LEFT_SIDE)<span class="comment">//如果构成的三角形的中心不在线的内侧，就代表这是个凹点</span></span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            <span class="keyword">if</span> (!MUtil.TryGetInnerPoints(triangle,<span class="keyword">this</span>, <span class="keyword">out</span> List&lt;<span class="built_in">int</span>&gt; inners))<span class="comment">//如果这个三角形内没有其他点，那就是耳朵</span></span><br><span class="line">            &#123;</span><br><span class="line">                triangle.ID = id;</span><br><span class="line">                ++id;</span><br><span class="line">                res.Add(triangle);<span class="comment">//添加这个耳朵三角形</span></span><br><span class="line">                pointsTmp.RemoveAt(i);<span class="comment">//从原多边形中裁去</span></span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    Triangle last = <span class="keyword">new</span> Triangle(pointsTmp[<span class="number">0</span>],pointsTmp[<span class="number">1</span>],pointsTmp[<span class="number">2</span>],id);<span class="comment">//将最后三个顶点组成三角形</span></span><br><span class="line">    res.Add(last);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*for (int i = 0; i &lt; res.Count; i++)</span></span><br><span class="line"><span class="comment">    &#123;</span></span><br><span class="line"><span class="comment">        var tri = res[i];</span></span><br><span class="line"><span class="comment">        for (int j = 0; j &lt; res.Count; j++)</span></span><br><span class="line"><span class="comment">        &#123;</span></span><br><span class="line"><span class="comment">            var triNext = res[j];</span></span><br><span class="line"><span class="comment">            if(tri.ID == triNext.ID)</span></span><br><span class="line"><span class="comment">                continue;</span></span><br><span class="line"><span class="comment">            if (tri.TryGetNeighbor(triNext, out int index))</span></span><br><span class="line"><span class="comment">            &#123;</span></span><br><span class="line"><span class="comment">                tri.SetNeighbor(index,triNext.ID);</span></span><br><span class="line"><span class="comment">            &#125;</span></span><br><span class="line"><span class="comment">            </span></span><br><span class="line"><span class="comment">        &#125;</span></span><br><span class="line"><span class="comment">    &#125;*/</span></span><br><span class="line">    MUtil.FindNeiborgh(res);<span class="comment">//将上面查找并设置邻居的代码封装到工具类中了</span></span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>进行测试，现在已经可以获得剖分后的三角形了</p>
-<p><img src="/images/20201110173810551_16904.png" srcset="/img/loading.gif"></p>
+<p><img src="/images/20201110173810551_16904.png" class="lazyload" data-srcset="/images/20201110173810551_16904.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII="></p>
 <h2 id="对内部有空洞的多边形进行剖分"><a href="#对内部有空洞的多边形进行剖分" class="headerlink" title="对内部有空洞的多边形进行剖分"></a>对内部有空洞的多边形进行剖分</h2><p>下一步就是如果内部存在空洞的情况了，在这先只考虑简单情况，即不出现套娃型空洞。<br>如图所示：</p>
-<p><img src="/images/20201110174354239_9305.png" srcset="/img/loading.gif" alt="内部有空洞（红色）"></p>
+<p><img src="/images/20201110174354239_9305.png" class="lazyload" data-srcset="/images/20201110174354239_9305.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" alt="内部有空洞（红色）"></p>
 <p>那么需要做的就是先将内部空洞多边形与外部合并成简单多边形，此处则需要寻找到<strong>互相可见点</strong>。</p>
-<div class="hljs"><pre><code class="hljs c#"><span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;summary&gt;</span></span>
-<span class="hljs-comment"><span class="hljs-doctag">///</span> 寻找互相可见点</span>
-<span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;/summary&gt;</span></span>
-<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-built_in">int</span>[] <span class="hljs-title">FindVisiblePoint</span>(<span class="hljs-params">Polygon outer, Polygon inner</span>)</span>
-<span class="hljs-function"></span>&#123;
-    <span class="hljs-built_in">int</span>[] ans = <span class="hljs-keyword">new</span> <span class="hljs-built_in">int</span>[<span class="hljs-number">2</span>];<span class="hljs-comment">//0为内部空洞的互相可见点的index，1为外部多边形的</span>
-    <span class="hljs-keyword">var</span> xMaxPoint = inner.GetXMaxPointIndex();<span class="hljs-comment">//遍历寻找内部多边形x值最大的点，如果x一样则找y更大的</span>
-    ans[<span class="hljs-number">0</span>] = xMaxPoint;<span class="hljs-comment">//内部多边形x值最大的点即是内部空洞的互相可见点</span>
-    outer.Clockwise();
-    inner.Counterclockwise();<span class="hljs-comment">//确认点的排布顺序（外部顺时针，内部逆时针）</span>
-    Vector2 targetPoint = inner.points[xMaxPoint] + Vector2.right * <span class="hljs-number">100000</span>;<span class="hljs-comment">//默认当前目标点在极远处</span>
-    Vector2 crossPoint = Vector2.zero;<span class="hljs-comment">//与线段的交点</span>
-    <span class="hljs-built_in">int</span> targetPointIndex = <span class="hljs-number">0</span>;
-    <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> i = <span class="hljs-number">0</span>; i &lt; outer.points.Count; ++i)
-    &#123;
-        Vector2 point1 = outer.points[i];
-        Vector2 point2 = outer.points[i + <span class="hljs-number">1</span> &gt;= outer.points.Count ? <span class="hljs-number">0</span> : i + <span class="hljs-number">1</span>];
-        <span class="hljs-keyword">if</span> (MMath.TryGetCrossWithXRay(inner.points[xMaxPoint], point1,point2, <span class="hljs-keyword">out</span> Vector2 res))<span class="hljs-comment">//获取向右发射的射线与目标线段的交点，如果没交点则返回false</span>
-        &#123;
-            Vector2 target = Vector2.Distance(point1, inner.points[xMaxPoint]) &lt;= Vector2.Distance(point2, inner.points[xMaxPoint]) ? point1 : point2;
-            <span class="hljs-built_in">int</span> index = target.Equals(point1) ? i : (i + <span class="hljs-number">1</span> &gt;= outer.points.Count ? <span class="hljs-number">0</span> : i + <span class="hljs-number">1</span>);
-            <span class="hljs-keyword">if</span> (Vector2.Distance(target, inner.points[xMaxPoint]) &lt; Vector2.Distance(targetPoint, inner.points[xMaxPoint]))<span class="hljs-comment">//如果小于之前的交点的距离</span>
-            &#123;
-                targetPoint = target;
-                crossPoint = res;
-                targetPointIndex = index;
-            &#125;
-            
-        &#125;
-    &#125;
-
-    <span class="hljs-keyword">if</span> (TryGetInnerPoints(<span class="hljs-keyword">new</span> Triangle(inner.points[xMaxPoint], crossPoint, targetPoint, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>), outer, <span class="hljs-keyword">out</span> List&lt;<span class="hljs-built_in">int</span>&gt; points)
-    ) <span class="hljs-comment">//如果三角形内有其他多边形的点</span>
-    &#123;
-        <span class="hljs-built_in">int</span> index = <span class="hljs-number">0</span>;
-        Vector2 v1 = (crossPoint - inner.points[xMaxPoint]).normalized;
-        <span class="hljs-built_in">float</span> minCos = Vector2.Dot(v1, (outer.points[points[<span class="hljs-number">0</span>]] - inner.points[xMaxPoint]).normalized);
-        <span class="hljs-keyword">for</span> (<span class="hljs-built_in">int</span> j = <span class="hljs-number">0</span>; j &lt; points.Count; ++j)<span class="hljs-comment">//寻找与“原点”角度最小的点</span>
-        &#123;
-            Vector2 v2 = outer.points[points[j]] - inner.points[xMaxPoint];
-            <span class="hljs-built_in">float</span> cos = Vector2.Dot(v1, v2.normalized);
-            <span class="hljs-keyword">if</span> (minCos &gt; cos)
-            &#123;
-                minCos = cos;
-                ans[<span class="hljs-number">1</span>] = points[j];
-            &#125;
-        &#125;
-        
-        <span class="hljs-keyword">return</span> ans;
-    &#125;
-
-    ans[<span class="hljs-number">1</span>] = targetPointIndex;
-    <span class="hljs-keyword">return</span> ans;
-&#125;</code></pre></div>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 寻找互相可见点</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="built_in">int</span>[] <span class="title">FindVisiblePoint</span>(<span class="params">Polygon outer, Polygon inner</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">int</span>[] ans = <span class="keyword">new</span> <span class="built_in">int</span>[<span class="number">2</span>];<span class="comment">//0为内部空洞的互相可见点的index，1为外部多边形的</span></span><br><span class="line">    <span class="keyword">var</span> xMaxPoint = inner.GetXMaxPointIndex();<span class="comment">//遍历寻找内部多边形x值最大的点，如果x一样则找y更大的</span></span><br><span class="line">    ans[<span class="number">0</span>] = xMaxPoint;<span class="comment">//内部多边形x值最大的点即是内部空洞的互相可见点</span></span><br><span class="line">    outer.Clockwise();</span><br><span class="line">    inner.Counterclockwise();<span class="comment">//确认点的排布顺序（外部顺时针，内部逆时针）</span></span><br><span class="line">    Vector2 targetPoint = inner.points[xMaxPoint] + Vector2.right * <span class="number">100000</span>;<span class="comment">//默认当前目标点在极远处</span></span><br><span class="line">    Vector2 crossPoint = Vector2.zero;<span class="comment">//与线段的交点</span></span><br><span class="line">    <span class="built_in">int</span> targetPointIndex = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="built_in">int</span> i = <span class="number">0</span>; i &lt; outer.points.Count; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        Vector2 point1 = outer.points[i];</span><br><span class="line">        Vector2 point2 = outer.points[i + <span class="number">1</span> &gt;= outer.points.Count ? <span class="number">0</span> : i + <span class="number">1</span>];</span><br><span class="line">        <span class="keyword">if</span> (MMath.TryGetCrossWithXRay(inner.points[xMaxPoint], point1,point2, <span class="keyword">out</span> Vector2 res))<span class="comment">//获取向右发射的射线与目标线段的交点，如果没交点则返回false</span></span><br><span class="line">        &#123;</span><br><span class="line">            Vector2 target = Vector2.Distance(point1, inner.points[xMaxPoint]) &lt;= Vector2.Distance(point2, inner.points[xMaxPoint]) ? point1 : point2;</span><br><span class="line">            <span class="built_in">int</span> index = target.Equals(point1) ? i : (i + <span class="number">1</span> &gt;= outer.points.Count ? <span class="number">0</span> : i + <span class="number">1</span>);</span><br><span class="line">            <span class="keyword">if</span> (Vector2.Distance(target, inner.points[xMaxPoint]) &lt; Vector2.Distance(targetPoint, inner.points[xMaxPoint]))<span class="comment">//如果小于之前的交点的距离</span></span><br><span class="line">            &#123;</span><br><span class="line">                targetPoint = target;</span><br><span class="line">                crossPoint = res;</span><br><span class="line">                targetPointIndex = index;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (TryGetInnerPoints(<span class="keyword">new</span> Triangle(inner.points[xMaxPoint], crossPoint, targetPoint, <span class="number">0</span>, <span class="number">0</span>), outer, <span class="keyword">out</span> List&lt;<span class="built_in">int</span>&gt; points)</span><br><span class="line">    ) <span class="comment">//如果三角形内有其他多边形的点</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">int</span> index = <span class="number">0</span>;</span><br><span class="line">        Vector2 v1 = (crossPoint - inner.points[xMaxPoint]).normalized;</span><br><span class="line">        <span class="built_in">float</span> minCos = Vector2.Dot(v1, (outer.points[points[<span class="number">0</span>]] - inner.points[xMaxPoint]).normalized);</span><br><span class="line">        <span class="keyword">for</span> (<span class="built_in">int</span> j = <span class="number">0</span>; j &lt; points.Count; ++j)<span class="comment">//寻找与“原点”角度最小的点</span></span><br><span class="line">        &#123;</span><br><span class="line">            Vector2 v2 = outer.points[points[j]] - inner.points[xMaxPoint];</span><br><span class="line">            <span class="built_in">float</span> cos = Vector2.Dot(v1, v2.normalized);</span><br><span class="line">            <span class="keyword">if</span> (minCos &gt; cos)</span><br><span class="line">            &#123;</span><br><span class="line">                minCos = cos;</span><br><span class="line">                ans[<span class="number">1</span>] = points[j];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ans[<span class="number">1</span>] = targetPointIndex;</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>至此，就能够将内多边形与外多边形合并成简单多边形了</p>
-<p><img src="/images/20201111104622012_23773.png" srcset="/img/loading.gif" alt="合并内外多边形"></p>
+<p><img src="/images/20201111104622012_23773.png" class="lazyload" data-srcset="/images/20201111104622012_23773.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" alt="合并内外多边形"></p>
 <p>然后再对这个简单多边形进行剖分</p>
-<p><img src="/images/20201111104739073_9002.png" srcset="/img/loading.gif" alt="三角剖分"></p>
+<p><img src="/images/20201111104739073_9002.png" class="lazyload" data-srcset="/images/20201111104739073_9002.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" alt="三角剖分"></p>
 <p>就可以得到剖分后的三角形们了。</p>
 <h2 id="使三角形支持A-寻路"><a href="#使三角形支持A-寻路" class="headerlink" title="使三角形支持A*寻路"></a>使三角形支持A*寻路</h2><p>当然，目前的三角形还是不够完成寻路操作的。对于三角形的寻路一般使用的是A*算法，所以有几个关键参数需要补充到三角形上，那就是<strong>G</strong>和<strong>H</strong>，其中<strong>H这里设置为到目标的直线距离</strong>，由于此时的网格不是二维数组网格那样的规整网格，所以G的计算需要重新想方法，在这里则<strong>设置为三角形的从进入到出去所要移动的距离（进入边到离开边的中点之间的距离）</strong>。<br>同时，还需要保存寻路中的父节点信息，可以直接保存为父三角形的ID。<br>据此，创建NavTriangle继承于Triangle来实现。</p>
-<div class="hljs"><pre><code class="hljs c#"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">NavTriangle</span> : <span class="hljs-title">Triangle</span>
-&#123;
-    <span class="hljs-comment">// 寻路相关参数</span>
-    <span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span> traversalTimes;   <span class="hljs-comment">//是否已经遍历过，可能会有多次（多个Agent）所以不设为bool</span>
-    <span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span> parentID;    <span class="hljs-comment">//父节点ID</span>
-    <span class="hljs-keyword">public</span> <span class="hljs-built_in">bool</span> isOpen;     <span class="hljs-comment">//是否打开</span>
-
-
-    <span class="hljs-comment">//评估相关</span>
-    <span class="hljs-keyword">public</span> <span class="hljs-built_in">double</span> H;   <span class="hljs-comment">//H值</span>
-    <span class="hljs-keyword">public</span> <span class="hljs-built_in">double</span> G;   <span class="hljs-comment">//G值</span>
-    <span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span> inWallIndex; <span class="hljs-comment">//进入边</span>
-    <span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span> outWallIndex; <span class="hljs-comment">//离开边</span>
-
-    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">NavTriangle</span>(<span class="hljs-params"></span>):<span class="hljs-title">base</span>(<span class="hljs-params"></span>)</span>
-<span class="hljs-function"></span>    &#123;
-        Reset();
-    &#125;
-
-    <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;summary&gt;</span></span>
-    <span class="hljs-comment"><span class="hljs-doctag">///</span> 重置</span>
-    <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;/summary&gt;</span></span>
-    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Reset</span>(<span class="hljs-params"></span>)</span>
-<span class="hljs-function"></span>    &#123;
-        <span class="hljs-keyword">this</span>.traversalTimes = <span class="hljs-number">-1</span>;
-        <span class="hljs-keyword">this</span>.parentID = <span class="hljs-number">-1</span>;
-        <span class="hljs-keyword">this</span>.isOpen = <span class="hljs-literal">false</span>;
-        <span class="hljs-keyword">this</span>.outWallIndex = <span class="hljs-number">-1</span>;
-        <span class="hljs-keyword">this</span>.H = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">this</span>.G = <span class="hljs-number">0</span>;
-        <span class="hljs-keyword">this</span>.inWallIndex = <span class="hljs-number">-1</span>;
-    &#125;
-&#125;</code></pre></div>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">NavTriangle</span> : <span class="title">Triangle</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 寻路相关参数</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> traversalTimes;   <span class="comment">//是否已经遍历过，可能会有多次（多个Agent）所以不设为bool</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> parentID;    <span class="comment">//父节点ID</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">bool</span> isOpen;     <span class="comment">//是否打开</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//评估相关</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">double</span> H;   <span class="comment">//H值</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">double</span> G;   <span class="comment">//G值</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> inWallIndex; <span class="comment">//进入边</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">int</span> outWallIndex; <span class="comment">//离开边</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">NavTriangle</span>(<span class="params"></span>):<span class="title">base</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Reset();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 重置</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Reset</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">this</span>.traversalTimes = <span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">this</span>.parentID = <span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">this</span>.isOpen = <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">this</span>.outWallIndex = <span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">this</span>.H = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">this</span>.G = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">this</span>.inWallIndex = <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>然后在Triangle中添加<code>public double[] neighborWallDistance;</code>保存相邻两边的中点距离（0-1，1-2，2-0三边），在构造函数中进行计算。</p>
 <p>到这，除了一些辅助性方法外，已经做好了A*的准备工作。</p>
 
-            </div>
-            <hr>
-            <div>
-              <div class="post-metas mb-3">
-                
-                  <div class="post-meta mr-3">
-                    <i class="iconfont icon-category"></i>
-                    
-                      <a class="hover-with-bg" href="/categories/Navigation/">Navigation</a>
-                    
-                  </div>
-                
-                
-                  <div class="post-meta">
-                    <i class="iconfont icon-tags"></i>
-                    
-                      <a class="hover-with-bg" href="/tags/NavMesh/">NavMesh</a>
-                    
-                      <a class="hover-with-bg" href="/tags/Navigation/">Navigation</a>
-                    
-                  </div>
-                
-              </div>
-              
-                <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！</p>
-              
-              
-                <div class="post-prevnext row">
-                  <article class="post-prev col-6">
-                    
-                    
-                      <a href="/2020/11/08/%E8%87%AA%E5%88%B6NavMesh2D%EF%BC%88%E4%B8%89%EF%BC%89/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">自制NavMesh2D（三）</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
-                  </article>
-                  <article class="post-next col-6">
-                    
-                    
-                      <a href="/2020/11/02/%E8%87%AA%E5%88%B6NavMesh2D%EF%BC%88%E4%B8%80%EF%BC%89/">
-                        <span class="hidden-mobile">自制NavMesh2D（一）</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
-                    
-                  </article>
-                </div>
-              
-            </div>
-
-            
-          </article>
-        </div>
-      </div>
-    </div>
+  
+  
     
-      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
-        <div id="toc">
-  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
-  <div id="tocbot"></div>
-</div>
-
-      </div>
-    
-  </div>
-</div>
-
-<!-- Custom -->
-
-
-    
-  </main>
-
-  
-    <a id="scroll-top-button" href="#" role="button">
-      <i class="iconfont icon-arrowup" aria-hidden="true"></i>
-    </a>
-  
-
-  
-    <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
-        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body mx-3">
-        <div class="md-form mb-5">
-          <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v"
-                 for="local-search-input">关键词</label>
-        </div>
-        <div class="list-group" id="local-search-result"></div>
-      </div>
-    </div>
-  </div>
-</div>
-  
-
-  
-
-  <footer class="text-center mt-5 py-3">
-  <div class="footer-content">
-     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
-  </div>
-  
-
-  
-
-  
-</footer>
-
-<!-- SCRIPTS -->
-<script  src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js" ></script>
-<script  src="https://cdn.staticfile.org/twitter-bootstrap/4.4.1/js/bootstrap.min.js" ></script>
-<script  src="/js/debouncer.js" ></script>
-<script  src="/js/main.js" ></script>
-
-<!-- Plugins -->
-
-
-  
-    <script  src="/js/lazyload.js" ></script>
-  
-
-
-
-  
-
-
-
-  <script defer src="https://cdn.staticfile.org/clipboard.js/2.0.6/clipboard.min.js" ></script>
-  <script  src="/js/clipboard-use.js" ></script>
-
-
-
-
-
-
-
-  <script  src="https://cdn.staticfile.org/tocbot/4.11.1/tocbot.min.js" ></script>
-  <script>
-    $(document).ready(function () {
-      var boardCtn = $('#board-ctn');
-      var boardTop = boardCtn.offset().top;
-
-      tocbot.init({
-        tocSelector: '#tocbot',
-        contentSelector: '#post-body',
-        headingSelector: 'h1,h2,h3,h4,h5,h6',
-        linkClass: 'tocbot-link',
-        activeLinkClass: 'tocbot-active-link',
-        listClass: 'tocbot-list',
-        isCollapsedClass: 'tocbot-is-collapsed',
-        collapsibleClass: 'tocbot-is-collapsible',
-        collapseDepth: 0,
-        scrollSmooth: true,
-        headingsOffset: -boardTop
-      });
-      if ($('.toc-list-item').length > 0) {
-        $('#toc').css('visibility', 'visible');
-      }
-    });
-  </script>
-
-
-
-  <script  src="https://cdn.staticfile.org/typed.js/2.0.11/typed.min.js" ></script>
-  <script>
-    var typed = new Typed('#subtitle', {
-      strings: [
-        '  ',
-        "自制NavMesh2D（二）&nbsp;",
-      ],
-      cursorChar: "_",
-      typeSpeed: 70,
-      loop: false,
-    });
-    typed.stop();
-    $(document).ready(function () {
-      $(".typed-cursor").addClass("h2");
-      typed.start();
-    });
-  </script>
-
-
-
-  <script  src="https://cdn.staticfile.org/anchor-js/4.2.2/anchor.min.js" ></script>
-  <script>
-    anchors.options = {
-      placement: "right",
-      visible: "hover",
+    <div class='footer'>
       
+      
+      
+        <div class='copyright'>
+          <blockquote>
+            
+              
+                <p>博客内容遵循 署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</p>
+
+              
+            
+              
+                <p>本文永久链接是：<a href=https://github.com/Medemus/medemus.github.io/2020/11/04/%E8%87%AA%E5%88%B6NavMesh2D%EF%BC%88%E4%BA%8C%EF%BC%89/>https://github.com/Medemus/medemus.github.io/2020/11/04/%E8%87%AA%E5%88%B6NavMesh2D%EF%BC%88%E4%BA%8C%EF%BC%89/</a></p>
+              
+            
+          </blockquote>
+        </div>
+      
+      
+    </div>
+  
+  
+    
+
+
+  <div class='article-meta' id="bottom">
+    <div class='new-meta-box'>
+      
+        
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2020-11-17T23:50:16+08:00">
+  <a class='notlink'>
+    <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
+    <p>更新于：2020年11月17日</p>
+  </a>
+</div>
+
+        
+      
+        
+          
+  
+  <div class="new-meta-item meta-tags"><a class="tag" href="/tags/NavMesh/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>NavMesh</p></a></div> <div class="new-meta-item meta-tags"><a class="tag" href="/tags/Navigation/" rel="nofollow"><i class="fas fa-hashtag fa-fw" aria-hidden="true"></i><p>Navigation</p></a></div>
+
+
+        
+      
+        
+          
+  <div class="new-meta-item share -mob-share-list">
+  <div class="-mob-share-list share-body">
+    
+      
+        <a class="-mob-share-qq" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://github.com/Medemus/medemus.github.io/2020/11/04/%E8%87%AA%E5%88%B6NavMesh2D%EF%BC%88%E4%BA%8C%EF%BC%89/&title=自制NavMesh2D（二） - MBLOG&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qq.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qq.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-qzone" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://github.com/Medemus/medemus.github.io/2020/11/04/%E8%87%AA%E5%88%B6NavMesh2D%EF%BC%88%E4%BA%8C%EF%BC%89/&title=自制NavMesh2D（二） - MBLOG&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qzone.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qzone.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=">
+          
+        </a>
+      
+    
+      
+        <a class="-mob-share-weibo" title="" rel="external nofollow noopener noreferrer noopener"
+          
+          target="_blank" href="http://service.weibo.com/share/share.php?url=https://github.com/Medemus/medemus.github.io/2020/11/04/%E8%87%AA%E5%88%B6NavMesh2D%EF%BC%88%E4%BA%8C%EF%BC%89/&title=自制NavMesh2D（二） - MBLOG&summary="
+          
+          >
+          
+            <img src="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/weibo.png" class="lazyload" data-srcset="https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/weibo.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=">
+          
+        </a>
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+
+
+        
+      
+    </div>
+  </div>
+
+
+  
+  
+
+  
+    <div class="prev-next">
+      
+        <a class='prev' href='/2020/11/08/%E8%87%AA%E5%88%B6NavMesh2D%EF%BC%88%E4%B8%89%EF%BC%89/'>
+          <p class='title'><i class="fas fa-chevron-left" aria-hidden="true"></i>自制NavMesh2D（三）</p>
+          <p class='content'>
+图源：https://www.pixiv.net/artworks/85447522
+
+自制NavMesh2D（三）对三角形进行A*寻路在获得具体路径之前，需要知道走过了哪些三角形，只有知道需...</p>
+        </a>
+      
+      
+        <a class='next' href='/2020/11/02/%E8%87%AA%E5%88%B6NavMesh2D%EF%BC%88%E4%B8%80%EF%BC%89/'>
+          <p class='title'>自制NavMesh2D（一）<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
+          <p class='content'>
+图源：https://www.pixiv.net/artworks/84705376
+
+自制NavMesh2D（一）网格构建三角形剖分三角形剖分的方法有好几种例如Delaunay三角剖分算法
+...</p>
+        </a>
+      
+    </div>
+  
+</article>
+
+
+  
+
+  <article class="post white-box reveal shadow" id="comments">
+    <p ct><i class='fas fa-comments'></i> 评论</p>
+    
+    <div id="valine_container" class="valine_thread">
+  <i class="fas fa-cog fa-spin fa-fw fa-2x"></i>
+</div>
+
+  </article>
+
+
+
+
+
+  <script>
+  // https://github.com/theme-next/hexo-theme-next/blob/master/layout/_third-party/math/mathjax.swig
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
     };
-    var el = "h1,h2,h3,h4,h5,h6".split(",");
-    var res = [];
-    for (item of el) {
-      res.push(".markdown-body > " + item)
+    (function () {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@3.0/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    // 文章章节标题不能为 “MathJax” ，否则会报错。
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+
+
+</div>
+<aside class='l_side'>
+  
+  
+    
+    
+
+
+
+  <section class="widget toc-wrapper shadow desktop mobile" id="toc-div" >
+    
+  <header>
+    
+      <i class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
+    
+  </header>
+
+
+    <div class='content'>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B9%E6%8D%AE%E9%A1%B6%E7%82%B9%E7%94%9F%E6%88%90%E5%A4%9A%E8%BE%B9%E5%BD%A2"><span class="toc-text">根据顶点生成多边形</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E5%8D%95%E4%B8%AA%E5%A4%9A%E8%BE%B9%E5%BD%A2%E8%BF%9B%E8%A1%8C%E4%B8%89%E8%A7%92%E5%BD%A2%E5%89%96%E5%88%86"><span class="toc-text">对单个多边形进行三角形剖分</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E5%86%85%E9%83%A8%E6%9C%89%E7%A9%BA%E6%B4%9E%E7%9A%84%E5%A4%9A%E8%BE%B9%E5%BD%A2%E8%BF%9B%E8%A1%8C%E5%89%96%E5%88%86"><span class="toc-text">对内部有空洞的多边形进行剖分</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E4%B8%89%E8%A7%92%E5%BD%A2%E6%94%AF%E6%8C%81A-%E5%AF%BB%E8%B7%AF"><span class="toc-text">使三角形支持A*寻路</span></a></li></ol>
+    </div>
+  </section>
+
+
+  
+
+
+</aside>
+
+
+
+		  
+		  <!--此文件用来存放一些不方便取值的变量-->
+<!--思路大概是将值藏到重加载的区域内-->
+
+<script>
+  window.pdata={}
+  pdata.ispage=true;
+  pdata.postTitle="自制NavMesh2D（二）";
+  pdata.commentPath="";
+  pdata.commentPlaceholder="";
+  // header 这里无论是否开启pjax都需要
+  var l_header=document.getElementById("l_header");
+  
+  l_header.classList.add("show");
+  
+  
+    // cover
+    var cover_wrapper=document.querySelector('.cover-wrapper');
+    
+    cover_wrapper.id="none";
+    cover_wrapper.style.display="none";
+    
+  
+</script>
+
+        </div>
+        
+  
+  <footer class="footer clearfix">
+    <br><br>
+    
+      
+        <div class="aplayer-container">
+          
+
+
+        </div>
+      
+    
+      
+        <br>
+        <div class="social-wrapper">
+          
+            
+          
+            
+          
+            
+          
+        </div>
+      
+    
+      
+        <div><p>博客内容遵循 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">署名-非商业性使用-相同方式共享 4.0 国际 (CC BY-NC-SA 4.0) 协议</a></p>
+</div>
+      
+    
+      
+        
+          <div><p><span id="lc-sv">本站总访问量为 <span id='number'><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span> 次</span> <span id="lc-uv">访客数为 <span id='number'><i class="fas fa-circle-notch fa-spin fa-fw" aria-hidden="true"></i></span> 人</span></p>
+</div>
+        
+      
+    
+      
+        本站使用
+        <a href="https://github.com/volantis-x/hexo-theme-volantis/tree/4.3.1" target="_blank" class="codename">Volantis</a>
+        作为主题
+      
+    
+      
+        <div class='copyright'>
+        <p><a href="/">Copyright © 2017-2020 XXX</a></p>
+
+        </div>
+      
+    
+  </footer>
+
+
+        <a id="s-top" class="fas fa-arrow-up fa-fw" href="javascript:void(0)"></a>
+      </div>
+    </div>
+    <div>
+      <script>
+/************这个文件存放不需要重载的全局变量和全局函数*********/
+window.volantis={};
+window.volantis.loadcss=document.getElementById("loadcss");
+/******************** Pjax ********************************/
+function VPjax(){
+	this.list=[] // 存放回调函数
+	this.start=()=>{
+	  for(var i=0;i<this.list.length;i++){
+		this.list[i].run();
+	  }
+	}
+	this.push=(fn,name)=>{
+		var f=new PjaxItem(fn,name);
+		this.list.push(f);
+	}
+	// 构造一个可以run的对象
+	function PjaxItem(fn,name){
+		// 函数名称
+		this.name = name || fn.name
+		// run方法
+		this.run=()=>{
+			fn()
+		}
+	}
+}
+volantis.pjax={}
+volantis.pjax.method={
+	complete: new VPjax(),
+	error: new VPjax(),
+	send: new VPjax()
+}
+volantis.pjax={
+	...volantis.pjax,
+	push: volantis.pjax.method.complete.push,
+	error: volantis.pjax.method.error.push,
+	send: volantis.pjax.method.send.push
+}
+/********************脚本懒加载函数********************************/
+// 已经加入了setTimeout
+function loadScript(src, cb) {
+	setTimeout(function() {
+		var HEAD = document.getElementsByTagName('head')[0] || document.documentElement;
+		var script = document.createElement('script');
+		script.setAttribute('type','text/javascript');
+		if (cb) script.onload = cb;
+		script.setAttribute('src', src);
+		HEAD.appendChild(script);
+	});
+}
+//https://github.com/filamentgroup/loadCSS
+var loadCSS = function( href, before, media, attributes ){
+	var doc = window.document;
+	var ss = doc.createElement( "link" );
+	var ref;
+	if( before ){
+		ref = before;
+	}
+	else {
+		var refs = ( doc.body || doc.getElementsByTagName( "head" )[ 0 ] ).childNodes;
+		ref = refs[ refs.length - 1];
+	}
+	var sheets = doc.styleSheets;
+	if( attributes ){
+		for( var attributeName in attributes ){
+			if( attributes.hasOwnProperty( attributeName ) ){
+				ss.setAttribute( attributeName, attributes[attributeName] );
+			}
+		}
+	}
+	ss.rel = "stylesheet";
+	ss.href = href;
+	ss.media = "only x";
+	function ready( cb ){
+		if( doc.body ){
+			return cb();
+		}
+		setTimeout(function(){
+			ready( cb );
+		});
+	}
+	ready( function(){
+		ref.parentNode.insertBefore( ss, ( before ? ref : ref.nextSibling ) );
+	});
+	var onloadcssdefined = function( cb ){
+		var resolvedHref = ss.href;
+		var i = sheets.length;
+		while( i-- ){
+			if( sheets[ i ].href === resolvedHref ){
+				return cb();
+			}
+		}
+		setTimeout(function() {
+			onloadcssdefined( cb );
+		});
+	};
+	function loadCB(){
+		if( ss.addEventListener ){
+			ss.removeEventListener( "load", loadCB );
+		}
+		ss.media = media || "all";
+	}
+	if( ss.addEventListener ){
+		ss.addEventListener( "load", loadCB);
+	}
+	ss.onloadcssdefined = onloadcssdefined;
+	onloadcssdefined( loadCB );
+	return ss;
+};
+</script>
+<script>
+  
+  loadCSS("https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14/css/all.min.css", window.volantis.loadcss);
+  
+  
+  
+  
+</script>
+<!-- required -->
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5/dist/jquery.min.js"></script>
+
+<script>
+  function pjax_fancybox() {
+    $(".md .gallery").find("img").each(function () { //渲染 fancybox
+      var element = document.createElement("a"); // a 标签
+      $(element).attr("class", "fancybox");
+      $(element).attr("pjax-fancybox", "");  // 过滤 pjax
+      $(element).attr("href", $(this).attr("src"));
+      if ($(this).attr("data-original")) {
+        $(element).attr("href", $(this).attr("data-original"));
+      }
+      $(element).attr("data-fancybox", "images");
+      var caption = "";   // 描述信息
+      if ($(this).attr('alt')) {  // 判断当前页面是否存在描述信息
+        $(element).attr('data-caption', $(this).attr('alt'));
+        caption = $(this).attr('alt');
+      }
+      var div = document.createElement("div");
+      $(div).addClass("fancybox");
+      $(this).wrap(div); // 最外层套 div ，其实主要作用还是 class 样式
+      var span = document.createElement("span");
+      $(span).addClass("image-caption");
+      $(span).text(caption); // 加描述
+      $(this).after(span);  // 再套一层描述
+      $(this).wrap(element);  // 最后套 a 标签
+    })
+    $(".md .gallery").find("img").fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+      closeClick: true,
+      helpers: {
+        overlay: {closeClick: true}
+      },
+      buttons: [
+        "zoom",
+        "close"
+      ]
+    });
+  };
+  function SCload_fancybox() {
+    if ($(".md .gallery").find("img").length == 0) return;
+    loadCSS("https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css", document.getElementById("loadcss"));
+    loadScript('https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js', pjax_fancybox)
+  };
+  $(function () {
+    SCload_fancybox();
+  });
+  function Pjax_SCload_fancybox(){
+	if (typeof $.fancybox == "undefined") {
+	 SCload_fancybox();
+    } else {
+	 pjax_fancybox();
     }
-    anchors.add(res.join(", "))
-  </script>
+  }
+  volantis.pjax.push(Pjax_SCload_fancybox)
+  volantis.pjax.send(()=>{
+      if (typeof $.fancybox != "undefined") {
+        $.fancybox.close();    // 关闭弹窗
+      }
+  },'fancybox')
+</script>
+
+
+<!-- internal -->
 
 
 
-  <script  src="/js/local-search.js" ></script>
-  <script>
-    var path = "/local-search.xml";
-    var inputArea = document.querySelector("#local-search-input");
-    inputArea.onclick = function () {
-      searchFunc(path, 'local-search-input', 'local-search-result');
-      this.onclick = null
+
+<script>
+  function loadIssuesJS() {
+    if ($(".md").find(".issues-api").length == 0) return;
+	
+	  loadScript('/js/issues.js');
+	
+  };
+  $(function () {
+    loadIssuesJS();
+  });
+  volantis.pjax.push(()=>{
+	if (typeof IssuesAPI == "undefined") {
+	  loadIssuesJS();
+	}
+  },"IssuesJS")
+</script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.1.0/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazyload",
+    threshold: 0
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    lazyLoadInstance.update();
+  });
+  document.addEventListener('pjax:complete', function () {
+    lazyLoadInstance.update();
+  });
+</script>
+
+
+
+
+  
+
+<script>
+  window.FPConfig = {
+	delay: 0,
+	ignoreKeywords: [],
+	maxRPS: 5,
+	hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+<script src="/js/valine.js"></script>
+
+
+<script>
+  function emoji(path, idx, ext) {
+    return path + "/" + path + "-" + idx + "." + ext;
+  }
+  var emojiMaps = {};
+  for (var i = 1; i <= 54; i++) {
+    emojiMaps['tieba-' + i] = emoji('tieba', i, 'png');
+  }
+  for (var i = 1; i <= 101; i++) {
+    emojiMaps['qq-' + i] = emoji('qq', i, 'gif');
+  }
+  for (var i = 1; i <= 116; i++) {
+    emojiMaps['aru-' + i] = emoji('aru', i, 'gif');
+  }
+  for (var i = 1; i <= 125; i++) {
+    emojiMaps['twemoji-' + i] = emoji('twemoji', i, 'png');
+  }
+  for (var i = 1; i <= 4; i++) {
+    emojiMaps['weibo-' + i] = emoji('weibo', i, 'png');
+  }
+  function pjax_valine() {
+    if(!document.querySelectorAll("#valine_container")[0])return;
+    let pagePlaceholder = pdata.commentPlaceholder || "快来评论吧~";
+    let path = pdata.commentPath;
+    if (path.length == 0) {
+      let defaultPath = '';
+      path = defaultPath || decodeURI(window.location.pathname);
     }
-  </script>
+    var valine = new Valine();
+    valine.init(Object.assign({"path":null,"placeholder":"快来评论吧~","appId":null,"appKey":null,"meta":["nick","mail","link"],"requiredFields":["nick","mail"],"enableQQ":true,"recordIP":false,"avatar":"robohash","pageSize":10,"lang":"zh-cn","highlight":true,"mathJax":false}, {
+      el: '#valine_container',
+      path: path,
+      placeholder: pagePlaceholder,
+      emojiCDN: 'https://cdn.jsdelivr.net/gh/volantis-x/cdn-emoji/valine/',
+      emojiMaps: emojiMaps,
+    }))
+  }
+  $(function () {
+    pjax_valine();
+  });
+  volantis.pjax.push(pjax_valine);
+</script>
 
 
 
-  <script  src="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.js" ></script>
-  <link  rel="stylesheet" href="https://cdn.staticfile.org/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+  
+<script src="/js/app.js"></script>
+
+
+
+<!-- optional -->
 
   <script>
-    $('#post img:not(.no-zoom img, img[no-zoom]), img[zoom]').each(
-      function () {
-        var element = document.createElement('a');
-        $(element).attr('data-fancybox', 'images');
-        $(element).attr('href', $(this).attr('src'));
-        $(this).wrap(element);
+const SearchServiceimagePath="https://cdn.jsdelivr.net/gh/volantis-x/cdn-volantis@master/img/";
+const ROOT =  ("/" || "/").endsWith('/') ? ("/" || "/") : ("//" || "/" );
+
+$('.input.u-search-input').one('focus',function(){
+	
+		loadScript('/js/search/hexo.js',setSearchService);
+	
+})
+
+function listenSearch(){
+  
+    customSearch = new HexoSearch({
+      imagePath: SearchServiceimagePath
+    });
+  
+}
+function setSearchService() {
+	listenSearch();
+	
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  <script defer>
+
+  const LCCounter = {
+    app_id: 'u9j57bwJod4EDmXWdxrwuqQT-MdYXbMMI',
+    app_key: 'jfHtEKVE24j0IVCGHbvuFClp',
+    custom_api_server: '',
+
+    // 查询存储的记录
+    getRecord(Counter, url, title) {
+      return new Promise(function (resolve, reject) {
+        Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({url})))
+          .then(resp => resp.json())
+          .then(({results, code, error}) => {
+            if (code === 401) {
+              throw error;
+            }
+            if (results && results.length > 0) {
+              var record = results[0];
+              resolve(record);
+            } else {
+              Counter('post', '/classes/Counter', {url, title: title, times: 0})
+                .then(resp => resp.json())
+                .then((record, error) => {
+                  if (error) {
+                    throw error;
+                  }
+                  resolve(record);
+                }).catch(error => {
+                console.error('Failed to create', error);
+                reject(error);
+              });
+            }
+          }).catch((error) => {
+          console.error('LeanCloud Counter Error:', error);
+          reject(error);
+        });
+      })
+    },
+
+    // 发起自增请求
+    increment(Counter, incrArr) {
+      return new Promise(function (resolve, reject) {
+        Counter('post', '/batch', {
+          "requests": incrArr
+        }).then((res) => {
+          res = res.json();
+          if (res.error) {
+            throw res.error;
+          }
+          resolve(res);
+        }).catch((error) => {
+          console.error('Failed to save visitor count', error);
+          reject(error);
+        });
+      });
+    },
+
+    // 构建自增请求体
+    buildIncrement(objectId) {
+      return {
+        "method": "PUT",
+        "path": `/1.1/classes/Counter/${ objectId }`,
+        "body": {
+          "times": {
+            '__op': 'Increment',
+            'amount': 1
+          }
+        }
+      }
+    },
+
+    // 校验是否为有效的 UV
+    validUV() {
+      var key = 'LeanCloudUVTimestamp';
+      var flag = localStorage.getItem(key);
+      if (flag) {
+        // 距离标记小于 24 小时则不计为 UV
+        if (new Date().getTime() - parseInt(flag) <= 86400000) {
+          return false;
+        }
+      }
+      localStorage.setItem(key, new Date().getTime().toString());
+      return true;
+    },
+
+    addCount(Counter) {
+      var enableIncr = '' === 'true' && window.location.hostname !== 'localhost';
+      enableIncr = true;
+      var getterArr = [];
+      var incrArr = [];
+      // 请求 PV 并自增
+      var pvCtn = document.querySelector('#lc-sv');
+      if (pvCtn || enableIncr) {
+        var pvGetter = this.getRecord(Counter, 'https://github.com/Medemus/medemus.github.io' + '/#lc-sv', 'Visits').then((record) => {
+          incrArr.push(this.buildIncrement(record.objectId))
+          var eles = document.querySelectorAll('#lc-sv #number');
+          if (eles.length > 0) {
+            eles.forEach((el,index,array)=>{
+              el.innerText = record.times + 1;
+              if (pvCtn) {
+                pvCtn.style.display = 'inline';
+              }
+            })
+          }
+        });
+        getterArr.push(pvGetter);
+      }
+
+      // 请求 UV 并自增
+      var uvCtn = document.querySelector('#lc-uv');
+      if (uvCtn || enableIncr) {
+        var uvGetter = this.getRecord(Counter, 'https://github.com/Medemus/medemus.github.io' + '/#lc-uv', 'Visitors').then((record) => {
+          var vuv = this.validUV();
+          vuv && incrArr.push(this.buildIncrement(record.objectId))
+          var eles = document.querySelectorAll('#lc-uv #number');
+          if (eles.length > 0) {
+            eles.forEach((el,index,array)=>{
+              el.innerText = record.times + (vuv ? 1 : 0);
+              if (uvCtn) {
+                uvCtn.style.display = 'inline';
+              }
+            })
+          }
+        });
+        getterArr.push(uvGetter);
+      }
+
+      // 请求文章的浏览数，如果是当前页面就自增
+      var allPV = document.querySelectorAll('#lc-pv');
+      if (allPV.length > 0 || enableIncr) {
+        for (i = 0; i < allPV.length; i++) {
+          let pv = allPV[i];
+          let title = pv.getAttribute('data-title');
+          var url = 'https://github.com/Medemus/medemus.github.io' + pv.getAttribute('data-path');
+          if (url) {
+            var viewGetter = this.getRecord(Counter, url, title).then((record) => {
+              // 是当前页面就自增
+              let curPath = window.location.pathname;
+              if (curPath.includes('index.html')) {
+                curPath = curPath.substring(0, curPath.lastIndexOf('index.html'));
+              }
+              if (pv.getAttribute('data-path') == curPath) {
+                incrArr.push(this.buildIncrement(record.objectId));
+              }
+              if (pv) {
+                var ele = pv.querySelector('#lc-pv #number');
+                if (ele) {
+                  if (pv.getAttribute('data-path') == curPath) {
+                    ele.innerText = (record.times || 0) + 1;
+                  } else {
+                    ele.innerText = record.times || 0;
+                  }
+                  pv.style.display = 'inline';
+                }
+              }
+            });
+            getterArr.push(viewGetter);
+          }
+        }
+      }
+
+      // 如果启动计数自增，批量发起自增请求
+      if (enableIncr) {
+        Promise.all(getterArr).then(() => {
+          incrArr.length > 0 && this.increment(Counter, incrArr);
+        })
+      }
+
+    },
+
+
+    fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${ api_server }/1.1${ url }`, {
+          method,
+          headers: {
+            'X-LC-Id': this.app_id,
+            'X-LC-Key': this.app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      this.addCount(Counter);
+    },
+
+    refreshCounter() {
+      var api_server = this.app_id.slice(-9) !== '-MdYXbMMI' ? this.custom_api_server : `https://${ this.app_id.slice(0, 8).toLowerCase() }.api.lncldglobal.com`;
+      if (api_server) {
+        this.fetchData(api_server);
+      } else {
+        fetch('https://app-router.leancloud.cn/2/route?appId=' + this.app_id)
+          .then(resp => resp.json())
+          .then(({api_server}) => {
+            this.fetchData('https://' + api_server);
+          });
+      }
+    }
+
+  };
+
+  LCCounter.refreshCounter();
+
+  document.addEventListener('pjax:complete', function () {
+    LCCounter.refreshCounter();
+  });
+</script>
+
+
+
+
+  <script>
+const rootElement = document.documentElement;
+const darkModeStorageKey = "user-color-scheme";
+const rootElementDarkModeAttributeName = "data-user-color-scheme";
+
+const setLS = (k, v) => {
+    localStorage.setItem(k, v);
+};
+
+const removeLS = (k) => {
+    localStorage.removeItem(k);
+};
+
+const getLS = (k) => {
+    return localStorage.getItem(k);
+};
+
+const getModeFromCSSMediaQuery = () => {
+  return window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
+};
+
+const resetRootDarkModeAttributeAndLS = () => {
+  rootElement.removeAttribute(rootElementDarkModeAttributeName);
+  removeLS(darkModeStorageKey);
+};
+
+const validColorModeKeys = {
+  dark: true,
+  light: true,
+};
+
+const applyCustomDarkModeSettings = (mode) => {
+  const currentSetting = mode || getLS(darkModeStorageKey);
+
+  if (currentSetting === getModeFromCSSMediaQuery()) {
+    resetRootDarkModeAttributeAndLS();
+  } else if (validColorModeKeys[currentSetting]) {
+    rootElement.setAttribute(rootElementDarkModeAttributeName, currentSetting);
+  } else {
+    resetRootDarkModeAttributeAndLS();
+  }
+};
+
+const invertDarkModeObj = {
+  dark: "light",
+  light: "dark",
+};
+
+/**
+ * get target mode
+ */
+const toggleCustomDarkMode = () => {
+  let currentSetting = getLS(darkModeStorageKey);
+
+  if (validColorModeKeys[currentSetting]) {
+    currentSetting = invertDarkModeObj[currentSetting];
+  } else if (currentSetting === null) {
+    currentSetting = invertDarkModeObj[getModeFromCSSMediaQuery()];
+  } else {
+    return;
+  }
+  setLS(darkModeStorageKey, currentSetting);
+  return currentSetting;
+};
+
+/**
+ * bind click event for toggle button
+ */
+var btn=$("#wrapper .toggle-mode-btn,#rightmenu-wrapper .toggle-mode-btn");
+function bindToggleButton() {
+    btn.on('click',(e) => {
+      const mode = toggleCustomDarkMode();
+      applyCustomDarkModeSettings(mode);
+    });
+}
+
+applyCustomDarkModeSettings();
+document.addEventListener("DOMContentLoaded", bindToggleButton);
+volantis.pjax.push(bindToggleButton);
+volantis.pjax.send(()=>{
+	btn.unbind('click');
+},'toggle-mode-btn-unbind');
+</script>
+
+
+
+
+
+
+
+
+<script>
+function listennSidebarTOC() {
+  const navItems = document.querySelectorAll(".toc li");
+  if (!navItems.length) return;
+  const sections = [...navItems].map((element) => {
+    const link = element.querySelector(".toc-link");
+    const target = document.getElementById(
+      decodeURI(link.getAttribute("href")).replace("#", "")
+    );
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      window.scrollTo({
+		top: target.offsetTop + 100,
+		
+		behavior: "smooth"
+		
+	  });
+    });
+    return target;
+  });
+
+  function activateNavByIndex(target) {
+    if (target.classList.contains("active-current")) return;
+
+    document.querySelectorAll(".toc .active").forEach((element) => {
+      element.classList.remove("active", "active-current");
+    });
+    target.classList.add("active", "active-current");
+    let parent = target.parentNode;
+    while (!parent.matches(".toc")) {
+      if (parent.matches("li")) parent.classList.add("active");
+      parent = parent.parentNode;
+    }
+  }
+
+  function findIndex(entries) {
+    let index = 0;
+    let entry = entries[index];
+    if (entry.boundingClientRect.top > 0) {
+      index = sections.indexOf(entry.target);
+      return index === 0 ? 0 : index - 1;
+    }
+    for (; index < entries.length; index++) {
+      if (entries[index].boundingClientRect.top <= 0) {
+        entry = entries[index];
+      } else {
+        return sections.indexOf(entry.target);
+      }
+    }
+    return sections.indexOf(entry.target);
+  }
+
+  function createIntersectionObserver(marginTop) {
+    marginTop = Math.floor(marginTop + 10000);
+    let intersectionObserver = new IntersectionObserver(
+      (entries, observe) => {
+        let scrollHeight = document.documentElement.scrollHeight + 100;
+        if (scrollHeight > marginTop) {
+          observe.disconnect();
+          createIntersectionObserver(scrollHeight);
+          return;
+        }
+        let index = findIndex(entries);
+        activateNavByIndex(navItems[index]);
+      },
+      {
+        rootMargin: marginTop + "px 0px -100% 0px",
+        threshold: 0,
       }
     );
-  </script>
+    sections.forEach((element) => {
+      element && intersectionObserver.observe(element);
+    });
+  }
+  createIntersectionObserver(document.documentElement.scrollHeight);
+}
+
+document.addEventListener("DOMContentLoaded", listennSidebarTOC);
+document.addEventListener("pjax:success", listennSidebarTOC);
+</script>
+
+<!-- more -->
+
+ 
+	   
+	    
 
 
+<script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script>
 
 
+<script>
+    var pjax;
+    document.addEventListener('DOMContentLoaded', function () {
+      pjax = new Pjax({
+        elements: 'a[href]:not([href^="#"]):not([href="javascript:void(0)"]):not([pjax-fancybox])',
+        selectors: [
+          "title",
+          
+          "#pjax-container",
+          "#pjax-header-nav-list"
+        ],
+        cacheBust: false,   // url 地址追加时间戳，用以避免浏览器缓存
+        timeout: 5000
+      });
+    });
 
+    document.addEventListener('pjax:send', function (e) {
+      //window.stop(); // 相当于点击了浏览器的停止按钮
 
+      try {
+        var currentUrl = window.location.pathname;
+        var targetUrl = e.triggerElement.href;
+        var banUrl = [""];
+        if (banUrl[0] != "") {
+          banUrl.forEach(item => {
+            if(currentUrl.indexOf(item) != -1 || targetUrl.indexOf(item) != -1) {
+              window.location.href = targetUrl;
+            }
+          });
+        }
+      } catch (error) {}
 
+      window.subData = null; // 移除标题（用于一二级导航栏切换处）
 
+      volantis.$switcher.removeClass('active'); // 关闭移动端激活的搜索框
+      volantis.$header.removeClass('z_search-open'); // 关闭移动端激活的搜索框
+      volantis.$wrapper.removeClass('sub'); // 跳转页面时关闭二级导航
 
+      // 解绑事件 避免重复监听
+      volantis.$topBtn.unbind('click');
+      $('.menu a').unbind('click');
+      $(window).unbind('resize');
+      $(window).unbind('scroll');
+      $(document).unbind('scroll');
+      $(document).unbind('click');
+      $('body').unbind('click');
+	  // 使用 volantis.pjax.send 方法传入pjax:send回调函数 参见layout/_partial/scripts/global.ejs
+	  volantis.pjax.method.send.start();
+    });
 
+    document.addEventListener('pjax:complete', function () {
+      $('.nav-main').find('.list-v').not('.menu-phone').removeAttr("style",""); // 移除小尾巴的移除
+      $('.menu-phone.list-v').removeAttr("style",""); // 移除小尾巴的移除
+      $('script[data-pjax], .pjax-reload script').each(function () {
+        $(this).parent().append($(this).remove());
+      });
+      try{
+		// 使用 volantis.pjax.push 方法传入重载函数 参见layout/_partial/scripts/global.ejs
+		volantis.pjax.method.complete.start();
+      } catch (e) {
+        console.log(e);
+      }
+    });
 
-
-
-
-
-</body>
+    document.addEventListener('pjax:error', function (e) {
+	  // 使用 volantis.pjax.error 方法传入pjax:error回调函数 参见layout/_partial/scripts/global.ejs
+	  volantis.pjax.method.error.start();
+      window.location.href = e.triggerElement.href;
+    });
+</script>
+ 
+	  
+    </div>
+  </body>
 </html>
