@@ -452,9 +452,8 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
   
   
   <blockquote>
-<p>图源：<a target="_blank" rel="noopener" href="https://www.pixiv.net/artworks/83559708">https://www.pixiv.net/artworks/83559708</a></p>
+<p>图源：<a target="_blank" rel="noopener" href="https://www.pixiv.net/artworks/83559708">https://www.pixiv.net/artworks/83559708</a><br>在有了一个简单的NavMesh后，开始回到第一步，构建多边形。</p>
 </blockquote>
-<h1 id="自制NavMesh2D（四）"><a href="#自制NavMesh2D（四）" class="headerlink" title="自制NavMesh2D（四）"></a>自制NavMesh2D（四）</h1><p>在有了一个简单的NavMesh后，开始回到第一步，构建多边形。</p>
 <h2 id="根据sprite顶点生成"><a href="#根据sprite顶点生成" class="headerlink" title="根据sprite顶点生成"></a>根据sprite顶点生成</h2><p>由于是基于2D所制作的，所以我在这没有选择“光栅化”去获取边界，而是直接拿到sprite的顶点信息，甚至直接拿到三角形的信息，通过给其标记为寻路网格或者障碍物来控制多边形的合成（偷个懒）。</p>
 <p>例如对于一个默认的长方形sprite其拥有顶点与三角形的信息，而这些其实可以直接利用到生成中。</p>
 <p><img src="/images/20201113164607665_30217.png" class="lazyload" data-srcset="/images/20201113164607665_30217.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" alt="长方形sprite"></p>
@@ -532,10 +531,10 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2021-03-09T23:21:27+08:00">
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2021-03-11T00:03:49+08:00">
   <a class='notlink'>
     <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
-    <p>更新于：2021年3月9日</p>
+    <p>更新于：2021年3月11日</p>
   </a>
 </div>
 
@@ -617,7 +616,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
           <p class='content'>
 图源：https://www.pixiv.net/artworks/85447522
 
-自制NavMesh2D（三）对三角形进行A*寻路在获得具体路径之前，需要知道走过了哪些三角形，只有知道需...</p>
+对三角形进行A*寻路在获得具体路径之前，需要知道走过了哪些三角形，只有知道需要经过哪些三角形才能进行接下...</p>
         </a>
       
     </div>
@@ -793,13 +792,6 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
         本站使用
         <a href="https://github.com/volantis-x/hexo-theme-volantis/tree/4.3.1" target="_blank" class="codename">Volantis</a>
         作为主题
-      
-    
-      
-        <div class='copyright'>
-        <p><a href="/">Copyright © 2017-2020 XXX</a></p>
-
-        </div>
       
     
   </footer>

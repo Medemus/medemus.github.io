@@ -410,12 +410,12 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
   <div class='md'>
     
       
-        NavMeshNavMesh
+        NavMesh
 生成
 首先对地图进行栅格化（分成一个个小格），然后就可以根据栅格化的地图获取到内边缘
 接下来对边缘进行简化首先找到两个点连线得到简化的边缘
 然后找到距离该线最远的点，加入顶点集合中重复该过程，直到所有不在简化轮廓集合中的点距离简化的边缘距离都小于某阈值。
-由于角色体型不同时，路径应该不同，在提取地图区域边缘时，向内多取一个角色体型半径生成特殊的寻路地图（即每种半...
+由于角色体型不同时，路径应该不同，在提取地图区域边缘时，向内多取一个角色体型半径生成特殊的寻路地图（即每种半径生成一个寻路...
       
     
   </div>
@@ -501,6 +501,16 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
       <ul class="entry navigation">
         
           <li><a class="flat-box"
+            title="/categories/Game/" href="/categories/Game/"
+            id="categoriesGame"
+            ><div class='name'>Game</div><div class='badge'>(2)</div></a></li>
+        
+          <li><a class="flat-box child"
+            title="/categories/Game/Game-Jam/" href="/categories/Game/Game-Jam/"
+            id="categoriesGameGame-Jam"
+            ><div class='name'>Game Jam</div><div class='badge'>(1)</div></a></li>
+        
+          <li><a class="flat-box"
             title="/categories/Navigation/" href="/categories/Navigation/"
             id="categoriesNavigation"
             ><div class='name'>Navigation</div><div class='badge'>(5)</div></a></li>
@@ -527,7 +537,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
 
     <div class='content'>
-      <a href="/tags/NavMesh/" style="font-size: 14px; color: #999">NavMesh</a> <a href="/tags/Navigation/" style="font-size: 14px; color: #999">Navigation</a>
+      <a href="/tags/GGJ/" style="font-size: 14px; color: #999">GGJ</a> <a href="/tags/Game/" style="font-size: 19px; color: #777">Game</a> <a href="/tags/Game-Jam/" style="font-size: 14px; color: #999">Game Jam</a> <a href="/tags/NavMesh/" style="font-size: 24px; color: #555">NavMesh</a> <a href="/tags/Navigation/" style="font-size: 24px; color: #555">Navigation</a>
     </div>
   </section>
 
@@ -608,13 +618,6 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
         本站使用
         <a href="https://github.com/volantis-x/hexo-theme-volantis/tree/4.3.1" target="_blank" class="codename">Volantis</a>
         作为主题
-      
-    
-      
-        <div class='copyright'>
-        <p><a href="/">Copyright © 2017-2020 XXX</a></p>
-
-        </div>
       
     
   </footer>

@@ -454,7 +454,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
   <blockquote>
 <p>图源：<a target="_blank" rel="noopener" href="https://www.pixiv.net/artworks/84705376">https://www.pixiv.net/artworks/84705376</a></p>
 </blockquote>
-<h1 id="自制NavMesh2D（一）"><a href="#自制NavMesh2D（一）" class="headerlink" title="自制NavMesh2D（一）"></a>自制NavMesh2D（一）</h1><h2 id="网格构建"><a href="#网格构建" class="headerlink" title="网格构建"></a>网格构建</h2><h3 id="三角形剖分"><a href="#三角形剖分" class="headerlink" title="三角形剖分"></a>三角形剖分</h3><p>三角形剖分的方法有好几种例如<strong>Delaunay三角剖分算法</strong></p>
+<h2 id="网格构建"><a href="#网格构建" class="headerlink" title="网格构建"></a>网格构建</h2><h3 id="三角形剖分"><a href="#三角形剖分" class="headerlink" title="三角形剖分"></a>三角形剖分</h3><p>三角形剖分的方法有好几种例如<strong>Delaunay三角剖分算法</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1.除了端点，三角形的边不包含其他任何点。</span><br><span class="line"></span><br><span class="line">2.除了在点上的连接，没有任何一条边是相交的。</span><br><span class="line"></span><br><span class="line">3.所有的面都是三角形，且所有三角形的合集是所有点集合的凸包。</span><br></pre></td></tr></table></figure>
 
 <p>但是这个方法里的几种算法都只适合于凸多边形，而真实情况则是会出现凹多边形以及空洞等情况。<br>所以使用<strong>切耳算法</strong>能够更好的解决这些问题。</p>
@@ -534,10 +534,10 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
     <div class='new-meta-box'>
       
         
-          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2021-03-09T23:21:14+08:00">
+          <div class="new-meta-item date" itemprop="dateUpdated" datetime="2021-03-11T00:03:52+08:00">
   <a class='notlink'>
     <i class="fas fa-edit fa-fw" aria-hidden="true"></i>
-    <p>更新于：2021年3月9日</p>
+    <p>更新于：2021年3月11日</p>
   </a>
 </div>
 
@@ -618,17 +618,17 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
           <p class='content'>
 图源：https://www.pixiv.net/artworks/85217491
 
-自制NavMesh2D（二）根据上面的学习，能够大致了解一个NavMesh2D的制作流程了，所以接下来就...</p>
+根据上面的学习，能够大致了解一个NavMesh2D的制作流程了，所以接下来就是上手实践。在此参考了Uni...</p>
         </a>
       
       
         <a class='next' href='/2020/10/29/NavMesh/'>
           <p class='title'>NavMesh<i class="fas fa-chevron-right" aria-hidden="true"></i></p>
-          <p class='content'>NavMeshNavMesh
+          <p class='content'>NavMesh
 生成
 首先对地图进行栅格化（分成一个个小格），然后就可以根据栅格化的地图获取到内边缘
 接下来对边缘进行简化首先找到两个点连线得到简化的边缘
-然后找到距离该线最远的点...</p>
+然后找到距离该线最远的点，加入顶点集合...</p>
         </a>
       
     </div>
@@ -804,13 +804,6 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
         本站使用
         <a href="https://github.com/volantis-x/hexo-theme-volantis/tree/4.3.1" target="_blank" class="codename">Volantis</a>
         作为主题
-      
-    
-      
-        <div class='copyright'>
-        <p><a href="/">Copyright © 2017-2020 XXX</a></p>
-
-        </div>
       
     
   </footer>

@@ -417,10 +417,10 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
     
       
         
-图源：https://www.pixiv.net/artworks/83559708
+图源：https://www.pixiv.net/artworks/83559708在有了一个简单的NavMesh后，开始回到第一步，构建多边形。
 
-自制NavMesh2D（四）在有了一个简单的NavMesh后，开始回到第一步，构建多边形。
-根据sprite顶点生成由于是基于2D所制作的，所以我在这没有选择“光栅化”去获取边界，而是直接拿到sprite的顶点信息，甚至直接拿到三角形的信息，通过给其标记为寻路网格或者障碍物来控制多边形的合成（偷个懒）。...
+根据sprite顶点生成由于是基于2D所制作的，所以我在这没有选择“光栅化”去获取边界，而是直接拿到sprite的顶点信息，甚至直接拿到三角形的信息，通过给其标记为寻路网格或者障碍物来控制多边形的合成（偷个懒）。
+例如对于一个默认的长方形sp...
       
     
   </div>
@@ -475,10 +475,10 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
         
 图源：https://www.pixiv.net/artworks/85447522
 
-自制NavMesh2D（三）对三角形进行A*寻路在获得具体路径之前，需要知道走过了哪些三角形，只有知道需要经过哪些三角形才能进行接下来的路径规划，而一般这步操作是由A*算法来进行的。
+对三角形进行A*寻路在获得具体路径之前，需要知道走过了哪些三角形，只有知道需要经过哪些三角形才能进行接下来的路径规划，而一般这步操作是由A*算法来进行的。
 在常见情况下，A*往往是对二维网格进行操作。
 
-那么如果要在不规则的三角形集合中进行A寻路，看上去似乎有很大不同，但其实...
+那么如果要在不规则的三角形集合中进行A寻路，看上去似乎有很大不同，但其实本质是一样的，在（二）中，为...
       
     
   </div>
@@ -533,8 +533,9 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
         
 图源：https://www.pixiv.net/artworks/85217491
 
-自制NavMesh2D（二）根据上面的学习，能够大致了解一个NavMesh2D的制作流程了，所以接下来就是上手实践。在此参考了Unity3D架构设计NavMesh寻路的设计。
-根据顶点生成多边形由于所制作的为纯2D，是可以由sprite的顶点信息获取边缘信息的，所以在此我想先跳过光栅化的阶段，先行从多边...
+根据上面的学习，能够大致了解一个NavMesh2D的制作流程了，所以接下来就是上手实践。在此参考了Unity3D架构设计NavMesh寻路的设计。
+根据顶点生成多边形由于所制作的为纯2D，是可以由sprite的顶点信息获取边缘信息的，所以在此我想先跳过光栅化的阶段，先行从多边形生成开始。
+在此需要制定多...
       
     
   </div>
@@ -589,10 +590,10 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
         
 图源：https://www.pixiv.net/artworks/84705376
 
-自制NavMesh2D（一）网格构建三角形剖分三角形剖分的方法有好几种例如Delaunay三角剖分算法
+网格构建三角形剖分三角形剖分的方法有好几种例如Delaunay三角剖分算法
 123451.除了端点，三角形的边不包含其他任何点。2.除了在点上的连接，没有任何一条边是相交的。3.所有的面都是三角形，且所有三角形的合集是所有点集合的凸包。
 
-但是这个方法里的几种算法都只适合于凸...
+但是这个方法里的几种算法都只适合于凸多边形，而真实情况则是会出现...
       
     
   </div>
@@ -678,6 +679,16 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
       <ul class="entry navigation">
         
           <li><a class="flat-box"
+            title="/categories/Game/" href="/categories/Game/"
+            id="categoriesGame"
+            ><div class='name'>Game</div><div class='badge'>(2)</div></a></li>
+        
+          <li><a class="flat-box child"
+            title="/categories/Game/Game-Jam/" href="/categories/Game/Game-Jam/"
+            id="categoriesGameGame-Jam"
+            ><div class='name'>Game Jam</div><div class='badge'>(1)</div></a></li>
+        
+          <li><a class="flat-box"
             title="/categories/Navigation/" href="/categories/Navigation/"
             id="categoriesNavigation"
             ><div class='name'>Navigation</div><div class='badge'>(5)</div></a></li>
@@ -704,7 +715,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
 
 
     <div class='content'>
-      <a href="/tags/NavMesh/" style="font-size: 14px; color: #999">NavMesh</a> <a href="/tags/Navigation/" style="font-size: 14px; color: #999">Navigation</a>
+      <a href="/tags/GGJ/" style="font-size: 14px; color: #999">GGJ</a> <a href="/tags/Game/" style="font-size: 19px; color: #777">Game</a> <a href="/tags/Game-Jam/" style="font-size: 14px; color: #999">Game Jam</a> <a href="/tags/NavMesh/" style="font-size: 24px; color: #555">NavMesh</a> <a href="/tags/Navigation/" style="font-size: 24px; color: #555">Navigation</a>
     </div>
   </section>
 
@@ -785,13 +796,6 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
         本站使用
         <a href="https://github.com/volantis-x/hexo-theme-volantis/tree/4.3.1" target="_blank" class="codename">Volantis</a>
         作为主题
-      
-    
-      
-        <div class='copyright'>
-        <p><a href="/">Copyright © 2017-2020 XXX</a></p>
-
-        </div>
       
     
   </footer>

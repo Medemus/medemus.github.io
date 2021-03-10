@@ -5,9 +5,7 @@
   <!-- SEO相关 -->
   
     
-      
-        <meta name="robots" content="index,follow">
-      
+      <meta name="robots" content="noindex,follow">
     
   
   <!-- 渲染优化 -->
@@ -26,7 +24,7 @@
 
   <!-- 页面元数据 -->
   
-  <title>MBLOG</title>
+  <title>归档：2020/8 - MBLOG</title>
   
 
   
@@ -345,7 +343,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
       <div id="l_cover">
   
     
-        <div id="full" class='cover-wrapper  dock' style="display: ;">
+        <div id="half" class='cover-wrapper  dock' style="display: ;">
           
             <div class='cover-bg lazyload placeholder' data-bg="https://i.loli.net/2021/03/10/DXThdRfegy1Pucb.jpg"></div>
           
@@ -366,7 +364,7 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
   </div>
 </div>
 
-          <div id="scroll-down" style="display: ;"><i class="fa fa-chevron-down scroll-down-effects"></i></div>
+          <div id="scroll-down" style="display: none;"><i class="fa fa-chevron-down scroll-down-effects"></i></div>
         </div>
     
   
@@ -377,325 +375,17 @@ if (/*@cc_on!@*/false || (!!window.MSInputMethodContext && !!document.documentMo
           
 
 <div class='l_main'>
-  
+	
+		
   <section class="post-list">
     
       
         
           
         
-          
-        
-          
-        
-          
-        
-          
-        
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
-          
-        
       
     
     
-      
-        
-          <div class='post-wrapper'>
-            <div class="post post-v3 white-box reveal shadow">
-  
-  
-  
-    <div class='headimg-div'>
-      <a class='headimg-a' href="/2020/11/12/%E8%87%AA%E5%88%B6NavMesh2D%EF%BC%88%E5%9B%9B%EF%BC%89/">
-        <img class='headimg' src='/images/bgn4.jpg'/>
-      </a>
-    </div>
-  
-  
-    
-    <h2 class="article-title" >
-      <a href="/2020/11/12/%E8%87%AA%E5%88%B6NavMesh2D%EF%BC%88%E5%9B%9B%EF%BC%89/">
-        自制NavMesh2D（四）
-      </a>
-    </h2>
-  
-  <div class='md'>
-    
-      
-        
-图源：https://www.pixiv.net/artworks/83559708在有了一个简单的NavMesh后，开始回到第一步，构建多边形。
-
-根据sprite顶点生成由于是基于2D所制作的，所以我在这没有选择“光栅化”去获取边界，而是直接拿到sprite的顶点信息，甚至直接拿到三角形的信息，通过给其标记为寻路网格或者障碍物来控制多边形的合成（偷个懒）。
-例如对于一个默认的长方形sp...
-      
-    
-  </div>
-  
-    <div class='meta-v3' line_style='solid'>
-      <div>
-        
-        <time>2020-11-12</time>
-        
-          <span class="dot"></span>
-          <a class="category-link" href="/categories/Navigation/">Navigation</a>
-        
-      </div>
-      
-        <div>
-          <a class='readmore' href='/2020/11/12/%E8%87%AA%E5%88%B6NavMesh2D%EF%BC%88%E5%9B%9B%EF%BC%89/'>
-            阅读全文
-          </a>
-        </div>
-      
-    </div>
-  
-
-</div>
-
-          </div>
-        
-      
-        
-          <div class='post-wrapper'>
-            <div class="post post-v3 white-box reveal shadow">
-  
-  
-  
-    <div class='headimg-div'>
-      <a class='headimg-a' href="/2020/11/08/%E8%87%AA%E5%88%B6NavMesh2D%EF%BC%88%E4%B8%89%EF%BC%89/">
-        <img class='headimg' src='/images/bgn3.jpg'/>
-      </a>
-    </div>
-  
-  
-    
-    <h2 class="article-title" >
-      <a href="/2020/11/08/%E8%87%AA%E5%88%B6NavMesh2D%EF%BC%88%E4%B8%89%EF%BC%89/">
-        自制NavMesh2D（三）
-      </a>
-    </h2>
-  
-  <div class='md'>
-    
-      
-        
-图源：https://www.pixiv.net/artworks/85447522
-
-对三角形进行A*寻路在获得具体路径之前，需要知道走过了哪些三角形，只有知道需要经过哪些三角形才能进行接下来的路径规划，而一般这步操作是由A*算法来进行的。
-在常见情况下，A*往往是对二维网格进行操作。
-
-那么如果要在不规则的三角形集合中进行A寻路，看上去似乎有很大不同，但其实本质是一样的，在（二）中，为...
-      
-    
-  </div>
-  
-    <div class='meta-v3' line_style='solid'>
-      <div>
-        
-        <time>2020-11-08</time>
-        
-          <span class="dot"></span>
-          <a class="category-link" href="/categories/Navigation/">Navigation</a>
-        
-      </div>
-      
-        <div>
-          <a class='readmore' href='/2020/11/08/%E8%87%AA%E5%88%B6NavMesh2D%EF%BC%88%E4%B8%89%EF%BC%89/'>
-            阅读全文
-          </a>
-        </div>
-      
-    </div>
-  
-
-</div>
-
-          </div>
-        
-      
-        
-          <div class='post-wrapper'>
-            <div class="post post-v3 white-box reveal shadow">
-  
-  
-  
-    <div class='headimg-div'>
-      <a class='headimg-a' href="/2020/11/04/%E8%87%AA%E5%88%B6NavMesh2D%EF%BC%88%E4%BA%8C%EF%BC%89/">
-        <img class='headimg' src='/images/bgn2.jpg'/>
-      </a>
-    </div>
-  
-  
-    
-    <h2 class="article-title" >
-      <a href="/2020/11/04/%E8%87%AA%E5%88%B6NavMesh2D%EF%BC%88%E4%BA%8C%EF%BC%89/">
-        自制NavMesh2D（二）
-      </a>
-    </h2>
-  
-  <div class='md'>
-    
-      
-        
-图源：https://www.pixiv.net/artworks/85217491
-
-根据上面的学习，能够大致了解一个NavMesh2D的制作流程了，所以接下来就是上手实践。在此参考了Unity3D架构设计NavMesh寻路的设计。
-根据顶点生成多边形由于所制作的为纯2D，是可以由sprite的顶点信息获取边缘信息的，所以在此我想先跳过光栅化的阶段，先行从多边形生成开始。
-在此需要制定多...
-      
-    
-  </div>
-  
-    <div class='meta-v3' line_style='solid'>
-      <div>
-        
-        <time>2020-11-04</time>
-        
-          <span class="dot"></span>
-          <a class="category-link" href="/categories/Navigation/">Navigation</a>
-        
-      </div>
-      
-        <div>
-          <a class='readmore' href='/2020/11/04/%E8%87%AA%E5%88%B6NavMesh2D%EF%BC%88%E4%BA%8C%EF%BC%89/'>
-            阅读全文
-          </a>
-        </div>
-      
-    </div>
-  
-
-</div>
-
-          </div>
-        
-      
-        
-          <div class='post-wrapper'>
-            <div class="post post-v3 white-box reveal shadow">
-  
-  
-  
-    <div class='headimg-div'>
-      <a class='headimg-a' href="/2020/11/02/%E8%87%AA%E5%88%B6NavMesh2D%EF%BC%88%E4%B8%80%EF%BC%89/">
-        <img class='headimg' src='/images/bgn1.jpg'/>
-      </a>
-    </div>
-  
-  
-    
-    <h2 class="article-title" >
-      <a href="/2020/11/02/%E8%87%AA%E5%88%B6NavMesh2D%EF%BC%88%E4%B8%80%EF%BC%89/">
-        自制NavMesh2D（一）
-      </a>
-    </h2>
-  
-  <div class='md'>
-    
-      
-        
-图源：https://www.pixiv.net/artworks/84705376
-
-网格构建三角形剖分三角形剖分的方法有好几种例如Delaunay三角剖分算法
-123451.除了端点，三角形的边不包含其他任何点。2.除了在点上的连接，没有任何一条边是相交的。3.所有的面都是三角形，且所有三角形的合集是所有点集合的凸包。
-
-但是这个方法里的几种算法都只适合于凸多边形，而真实情况则是会出现...
-      
-    
-  </div>
-  
-    <div class='meta-v3' line_style='solid'>
-      <div>
-        
-        <time>2020-11-02</time>
-        
-          <span class="dot"></span>
-          <a class="category-link" href="/categories/Navigation/">Navigation</a>
-        
-      </div>
-      
-        <div>
-          <a class='readmore' href='/2020/11/02/%E8%87%AA%E5%88%B6NavMesh2D%EF%BC%88%E4%B8%80%EF%BC%89/'>
-            阅读全文
-          </a>
-        </div>
-      
-    </div>
-  
-
-</div>
-
-          </div>
-        
-      
-        
-          <div class='post-wrapper'>
-            <div class="post post-v3 white-box reveal shadow">
-  
-  
-  
-    <div class='headimg-div'>
-      <a class='headimg-a' href="/2020/10/29/NavMesh/">
-        <img class='headimg' src='/images/NavTop.png'/>
-      </a>
-    </div>
-  
-  
-    
-    <h2 class="article-title" >
-      <a href="/2020/10/29/NavMesh/">
-        NavMesh
-      </a>
-    </h2>
-  
-  <div class='md'>
-    
-      
-        NavMesh
-生成
-首先对地图进行栅格化（分成一个个小格），然后就可以根据栅格化的地图获取到内边缘
-接下来对边缘进行简化首先找到两个点连线得到简化的边缘
-然后找到距离该线最远的点，加入顶点集合中重复该过程，直到所有不在简化轮廓集合中的点距离简化的边缘距离都小于某阈值。
-由于角色体型不同时，路径应该不同，在提取地图区域边缘时，向内多取一个角色体型半径生成特殊的寻路地图（即每种半径生成一个寻路...
-      
-    
-  </div>
-  
-    <div class='meta-v3' line_style='solid'>
-      <div>
-        
-        <time>2020-10-29</time>
-        
-          <span class="dot"></span>
-          <a class="category-link" href="/categories/Navigation/">Navigation</a>
-        
-      </div>
-      
-        <div>
-          <a class='readmore' href='/2020/10/29/NavMesh/'>
-            阅读全文
-          </a>
-        </div>
-      
-    </div>
-  
-
-</div>
-
-          </div>
-        
       
         
           <div class='post-wrapper'>
@@ -753,59 +443,6 @@ Rules
           </div>
         
       
-        
-          <div class='post-wrapper'>
-            <div class="post post-v3 white-box reveal shadow">
-  
-  
-  
-    <div class='headimg-div'>
-      <a class='headimg-a' href="/2019/01/27/SALOON%20ARENA(GGJ%202019)/">
-        <img class='headimg' src='https://i.loli.net/2021/03/10/7SFEcmUJoVlApq2.png'/>
-      </a>
-    </div>
-  
-  
-    
-    <h2 class="article-title" >
-      <a href="/2019/01/27/SALOON%20ARENA(GGJ%202019)/">
-        SALOON ARENA(GGJ 2019)
-      </a>
-    </h2>
-  
-  <div class='md'>
-    
-      
-        Global Game Jam Online
-When the owners were not at home, the sweeping robots began their carnival! They throw the garbage they collected to other robots and fight with each other. This game support...
-      
-    
-  </div>
-  
-    <div class='meta-v3' line_style='solid'>
-      <div>
-        
-        <time>2019-01-27</time>
-        
-          <span class="dot"></span>
-          <a class="category-link" href="/categories/Game/">Game</a><span class="sep"></span><a class="category-link" href="/categories/Game/Game-Jam/">Game Jam</a>
-        
-      </div>
-      
-        <div>
-          <a class='readmore' href='/2019/01/27/SALOON%20ARENA(GGJ%202019)/'>
-            阅读全文
-          </a>
-        </div>
-      
-    </div>
-  
-
-</div>
-
-          </div>
-        
-      
     
   </section>
   
@@ -813,6 +450,7 @@ When the owners were not at home, the sweeping robots began their carnival! They
   
 
 
+	
 </div>
 <aside class='l_side'>
   
@@ -911,7 +549,6 @@ When the owners were not at home, the sweeping robots began their carnival! They
 </aside>
 
 
-
 		  
 		  <!--此文件用来存放一些不方便取值的变量-->
 <!--思路大概是将值藏到重加载的区域内-->
@@ -931,7 +568,7 @@ When the owners were not at home, the sweeping robots began their carnival! They
     // cover
     var cover_wrapper=document.querySelector('.cover-wrapper');
     
-    cover_wrapper.id="full";
+    cover_wrapper.id="half";
     cover_wrapper.style.display="";
     
   
